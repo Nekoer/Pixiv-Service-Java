@@ -654,7 +654,7 @@ public class IllustServiceImpl implements IllustService {
             Integer all = illustMapper.selectCount(null);
 
             //18x插画
-            Integer x18 = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","illust").eq("x_restrict","1"));
+            Integer x18 = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","illust").eq("x_restrict","1").gt("total_bookmarks",2000));
 
             //插画
             Integer illust = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","illust"));
