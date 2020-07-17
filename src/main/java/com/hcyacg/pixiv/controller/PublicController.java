@@ -56,7 +56,7 @@ public class PublicController {
     }
 
     @RequestMapping(value = "setu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result amazingPic(@RequestParam(value = "page",required = false) String page,@RequestParam(value = "perPage",required = false) String perPage){
-        return publicService.amazingPic(page, perPage);
+    public Result amazingPic(){
+        return publicService.amazingPic();
     }
 }

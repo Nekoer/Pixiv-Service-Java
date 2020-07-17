@@ -275,99 +275,87 @@ public class PublicServiceImpl implements PublicService {
     }
 
     @Override
-    public Result amazingPic(String page, String perPage) {
+    public Result amazingPic() {
         try {
 
             Date date = new Date();
             String time = AppConstant.SDF.format(date);
 
-            if (StringUtils.isBlank(page)) {
-                page = "1";
+
+
+//            AmazingPic amazingPic = new AmazingPic();
+            List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("x_restrict", 1).eq("type", "illust").orderByAsc("id"));
+//            amazingPic.setTotal(illustPage.getTotal());
+//            amazingPic.setCurrent(illustPage.getCurrent());
+//            amazingPic.setPages(illustPage.getPages());
+//            amazingPic.setSize(illustPage.getSize());
+
+            int num = (int) (Math.random() * (illusts.size() - 1) + 1);
+
+
+            Illust illust = illusts.get(num - 1);
+
+            //将数据添加到IllustDto
+            IllustDto illustDto = new IllustDto();
+            illustDto.setIllust(illust.getIllustId());
+            illustDto.setType(illust.getType());
+            illustDto.setCaption(illust.getCaption());
+            illustDto.setTitle(illust.getTitle());
+            illustDto.setRestrict(illust.getRestrictN());
+            illustDto.setLarge(domin + illust.getLarge());
+            illustDto.setCreateDate(illust.getCreateDate());
+            illustDto.setPageCount(illust.getPageCount());
+            illustDto.setWidth(illust.getWidth());
+            illustDto.setHeight(illust.getHeight());
+            illustDto.setSanityLevel(illust.getSanityLevel());
+            illustDto.setxRestrict(illust.getxRestrict());
+            illustDto.setSeries(illust.getSeries());
+            illustDto.setTotalView(illust.getTotalView());
+            illustDto.setTotalBookmarks(illust.getTotalBookmarks());
+            illustDto.setIsBookmarked(illust.getIsBookmarked());
+            illustDto.setVisible(illust.getVisible());
+            illustDto.setIsMuted(illust.getIsMuted());
+            illustDto.setTotalComments(illust.getTotalComments());
+
+            //作者信息
+            User user1 = userMapper.selectOne(new QueryWrapper<User>().eq("userid", illust.getUserId()));
+            UserDto userDto = new UserDto();
+            userDto.setId(user1.getUserId());
+            userDto.setAccount(user1.getAccount());
+            userDto.setName(user1.getName());
+            userDto.setIsFollowed(user1.getIsFollowed());
+            userDto.setProfileImageUrls(domin + user1.getProfileImageUrls());
+            illustDto.setUser(userDto);
+
+            //获取标签
+            List<TagOfIllust> tagOfIllusts = tagOfIllustMapper.selectList(new QueryWrapper<TagOfIllust>().eq("illust", illust.getIllustId()));
+            List<TagDto> tagDtos = new ArrayList<>();
+            for (TagOfIllust tagOfIllust : tagOfIllusts) {
+
+                Tag tag = tagMapper.selectById(tagOfIllust.getTagId());
+                TagDto tagDto = new TagDto();
+                tagDto.setName(tag.getName());
+                tagDto.setTranslatedName(tag.getTranslatedName());
+                tagDtos.add(tagDto);
             }
+            illustDto.setTags(tagDtos);
 
-            if (StringUtils.isBlank(perPage)) {
-                perPage = "50";
+            //获取高清图片
+            List<Original> originals = originalMapper.selectList(new QueryWrapper<Original>().eq("illustid", illust.getIllustId()));
+            List<OriginalDto> originalDtos = new ArrayList<>();
+            for (Original original : originals) {
+                OriginalDto originalDto = new OriginalDto();
+                originalDto.setUrl(domin + original.getUrl());
+
+                originalDtos.add(originalDto);
             }
-
-            if (redisUtils.hasKey(AppConstant.AMAZING_PIC + page + "::" + perPage + "::" + time)){
-                return new Result(201, "获取成功", redisUtils.get(AppConstant.AMAZING_PIC + page + "::" + perPage + "::" + time), null);
-            }
-
-            AmazingPic amazingPic = new AmazingPic();
-            Page<Illust> illustPage = illustMapper.selectPage(new Page<Illust>(Long.parseLong(page), Long.parseLong(perPage)), new QueryWrapper<Illust>().eq("x_restrict", 1).eq("type", "illust").orderByAsc("id"));
-            amazingPic.setTotal(illustPage.getTotal());
-            amazingPic.setCurrent(illustPage.getCurrent());
-            amazingPic.setPages(illustPage.getPages());
-            amazingPic.setSize(illustPage.getSize());
-
-            List<IllustDto> illustDtos = new ArrayList<>();
-            for (int i = 0; i < illustPage.getRecords().size(); i++) {
-                Illust illust = illustPage.getRecords().get(i);
-
-                //将数据添加到IllustDto
-                IllustDto illustDto = new IllustDto();
-                illustDto.setIllust(illust.getIllustId());
-                illustDto.setType(illust.getType());
-                illustDto.setCaption(illust.getCaption());
-                illustDto.setTitle(illust.getTitle());
-                illustDto.setRestrict(illust.getRestrictN());
-                illustDto.setLarge(domin + illust.getLarge());
-                illustDto.setCreateDate(illust.getCreateDate());
-                illustDto.setPageCount(illust.getPageCount());
-                illustDto.setWidth(illust.getWidth());
-                illustDto.setHeight(illust.getHeight());
-                illustDto.setSanityLevel(illust.getSanityLevel());
-                illustDto.setxRestrict(illust.getxRestrict());
-                illustDto.setSeries(illust.getSeries());
-                illustDto.setTotalView(illust.getTotalView());
-                illustDto.setTotalBookmarks(illust.getTotalBookmarks());
-                illustDto.setIsBookmarked(illust.getIsBookmarked());
-                illustDto.setVisible(illust.getVisible());
-                illustDto.setIsMuted(illust.getIsMuted());
-                illustDto.setTotalComments(illust.getTotalComments());
-
-                //作者信息
-                User user1 = userMapper.selectOne(new QueryWrapper<User>().eq("userid", illust.getUserId()));
-                UserDto userDto = new UserDto();
-                userDto.setId(user1.getUserId());
-                userDto.setAccount(user1.getAccount());
-                userDto.setName(user1.getName());
-                userDto.setIsFollowed(user1.getIsFollowed());
-                userDto.setProfileImageUrls(domin + user1.getProfileImageUrls());
-                illustDto.setUser(userDto);
-
-                //获取标签
-                List<TagOfIllust> tagOfIllusts = tagOfIllustMapper.selectList(new QueryWrapper<TagOfIllust>().eq("illust", illust.getIllustId()));
-                List<TagDto> tagDtos = new ArrayList<>();
-                for (TagOfIllust tagOfIllust : tagOfIllusts) {
-
-                    Tag tag = tagMapper.selectById(tagOfIllust.getTagId());
-                    TagDto tagDto = new TagDto();
-                    tagDto.setName(tag.getName());
-                    tagDto.setTranslatedName(tag.getTranslatedName());
-                    tagDtos.add(tagDto);
-                }
-                illustDto.setTags(tagDtos);
-
-                //获取高清图片
-                List<Original> originals = originalMapper.selectList(new QueryWrapper<Original>().eq("illustid", illust.getIllustId()));
-                List<OriginalDto> originalDtos = new ArrayList<>();
-                for (Original original : originals) {
-                    OriginalDto originalDto = new OriginalDto();
-                    originalDto.setUrl(domin + original.getUrl());
-
-                    originalDtos.add(originalDto);
-                }
-                illustDto.setOriginals(originalDtos);
-
-                illustDtos.add(illustDto);
-            }
-            amazingPic.setIllustDtos(illustDtos);
-
-            redisUtils.set(AppConstant.AMAZING_PIC + page + "::" + perPage + "::" + time, amazingPic, 60 * 60L);
+            illustDto.setOriginals(originalDtos);
 
 
-            return new Result(201, "获取成功", amazingPic, null);
+//            amazingPic.setIllustDtos(illustDtos);
+
+
+            return new Result(201, "获取成功", illustDto, null);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(500, "获取失败", null, "服务器内部错误");

@@ -51,5 +51,5 @@ public interface PublicService {
      * @param perPage 显示的数量
      * @return 返回数据
      */
-    Result amazingPic(String page,String perPage);
+    Result amazingPic();
 }
