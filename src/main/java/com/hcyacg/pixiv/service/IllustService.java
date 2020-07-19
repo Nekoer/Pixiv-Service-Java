@@ -17,9 +17,11 @@ public interface IllustService {
     /**
      * 插画细节
      * @param illustId 插画id
+     * @param authorization
+     * @param reduction 是否还原
      * @return 返回插画详细数据
      */
-    Result detail(String illustId,String authorization);
+    Result detail(String illustId,String authorization,boolean reduction);
     /**
      * 插画评论
      * @param illustId 插画id

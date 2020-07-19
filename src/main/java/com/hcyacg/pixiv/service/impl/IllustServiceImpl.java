@@ -73,7 +73,7 @@ public class IllustServiceImpl implements IllustService {
     private JwtOperation jwtOperation;
 
     @Override
-    public Result detail(String illustId, String authorization) {
+    public Result detail(String illustId, String authorization, boolean reduction) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
@@ -87,6 +87,44 @@ public class IllustServiceImpl implements IllustService {
                 return new Result(400, "请求失败", "", "插画id不能为空");
             }
 
+            //判断是否直接将原数据返回
+            if (reduction) {
+                if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId + "::" + reduction)) {
+                    return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId + "::" + reduction), null));
+                }
+
+                httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/detail?illust_id=" + illustId);
+                httpGet.addHeader("App-OS", "ios");
+                httpGet.addHeader("App-OS-Version", "12.2");
+                httpGet.addHeader("App-Version", "7.6.2");
+                httpGet.addHeader("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)");
+
+                Object token1 = redisUtils.get("token");
+                if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
+                    accountService.getToken();
+                    token1 = redisUtils.get("token");
+                }
+                PixivToken token = (PixivToken) token1;
+                httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
+
+
+                //发送请求
+                CloseableHttpResponse response = httpClient.execute(httpGet);
+                InputStream in = response.getEntity().getContent();
+                byte[] buffer = new byte[1];
+                int len = 0;
+                String data = "";
+                while ((len = in.read(buffer)) > 0) {
+                    infoStream.write(buffer, 0, len);
+                }
+
+                infoStream.close();
+                httpClient.close();
+                redisUtils.set(AppConstant.DETAIL_REDIS + illustId + "::" + reduction, JSONObject.parseObject(infoStream.toString("UTF-8")), 7 * 24 * 60 * 60L);
+
+                return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId + "::" + reduction), null));
+            }
+
             List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("illust", illustId));
             if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId) && redisUtils.hasKey(AppConstant.DETAIL_REDIS + "login::" + illustId)) {
                 //判断是否登录
@@ -94,15 +132,19 @@ public class IllustServiceImpl implements IllustService {
                     Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
                     //判断是否有权限看
                     if (AppConstant.ACCOUNT_HAS_PRON.equals(account.getHasPron())) {
-                        return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null);
+                        return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null));
                     } else {
-                        return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
+                        return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
                     }
                 }
-                return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
-            } else if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId)) {
-                return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
-            } else if (CollectionUtils.isNotEmpty(illusts)) {
+                return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
+            }
+
+            if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId)) {
+                return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
+            }
+
+            if (CollectionUtils.isNotEmpty(illusts)) {
                 //从数据库中获取该插画信息
                 Illust illust1 = illustMapper.selectOne(new QueryWrapper<Illust>().eq("illust", illustId));
                 IllustDto illustDto = new IllustDto();
@@ -176,7 +218,7 @@ public class IllustServiceImpl implements IllustService {
                     illustDto.setOriginals(originalDtos);
                     //添加无需登录的缓存
                     redisUtils.set(AppConstant.DETAIL_REDIS + illustId, illustDto, 7 * 24 * 60 * 60L);
-                    return new Result(201, "获取成功", illustDto, null);
+                    return httpUtils.setBuild(res, new Result(201, "获取成功", illustDto, null));
                 }
 
                 //判断是否登录
@@ -184,14 +226,14 @@ public class IllustServiceImpl implements IllustService {
                     Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
                     //判断是否有权限看
                     if (AppConstant.ACCOUNT_HAS_PRON.equals(account.getHasPron())) {
-                        return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null);
+                        return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null));
                     } else {
-                        return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
+                        return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
                     }
                 }
 
 
-                return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
+                return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
             } else {
                 httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/detail?illust_id=" + illustId);
                 httpGet.addHeader("App-OS", "ios");
@@ -450,7 +492,7 @@ public class IllustServiceImpl implements IllustService {
                 illustDto.setOriginals(originalDtos);
                 //添加无需登录的缓存
                 redisUtils.set(AppConstant.DETAIL_REDIS + illustId, illustDto, 7 * 24 * 60 * 60L);
-                return new Result(201, "获取成功", illustDto, null);
+                return httpUtils.setBuild(res, new Result(201, "获取成功", illustDto, null));
             }
 
             //判断是否登录
@@ -458,17 +500,17 @@ public class IllustServiceImpl implements IllustService {
                 Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
                 //判断是否有权限看
                 if (AppConstant.ACCOUNT_HAS_PRON.equals(account.getHasPron())) {
-                    return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null);
+                    return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + "login::" + illustId), null));
                 } else {
-                    return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
+                    return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
                 }
             }
 
 
-            return new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null);
+            return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(500, "请求失败", "", e.getMessage());
+            return httpUtils.setBuild(res, new Result(500, "请求失败", "", e.getMessage()));
         } finally {
             assert httpGet != null;
             httpGet.abort();
@@ -648,33 +690,33 @@ public class IllustServiceImpl implements IllustService {
 
     @Override
     public Result getPicNumber() {
-        try{
+        try {
 
             //总量
             Integer all = illustMapper.selectCount(null);
 
             //18x插画
-            Integer x18 = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","illust").eq("x_restrict","1").gt("total_bookmarks",3500));
+            Integer x18 = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type", "illust").eq("x_restrict", "1").gt("total_bookmarks", 3500));
 
             //插画
-            Integer illust = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","illust"));
+            Integer illust = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type", "illust"));
 
             //漫画 manga
-            Integer manga = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","manga"));
+            Integer manga = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type", "manga"));
 
             //动图 ugoira
-            Integer ugoira = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type","ugoira"));
+            Integer ugoira = illustMapper.selectCount(new QueryWrapper<Illust>().eq("type", "ugoira"));
 
-            Map<String,Object> map = new HashMap<String,Object>();
-            map.put("all",all);
-            map.put("x18",x18);
-            map.put("illust",illust);
-            map.put("manga",manga);
-            map.put("ugoira",ugoira);
-            return new Result(201,"获取成功",map,null);
-        }catch (Exception e){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("all", all);
+            map.put("x18", x18);
+            map.put("illust", illust);
+            map.put("manga", manga);
+            map.put("ugoira", ugoira);
+            return httpUtils.setBuild(res, new Result(201, "获取成功", map, null));
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(500,"获取失败",null,e.getMessage());
+            return httpUtils.setBuild(res, new Result(500, "获取失败", null, e.getMessage()));
         }
     }
 }

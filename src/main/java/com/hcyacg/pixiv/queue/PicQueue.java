@@ -60,7 +60,7 @@ public class PicQueue {
                 }
 
 
-                illustService.detail(illust,null);
+                illustService.detail(illust,null,false);
 
 
             }
