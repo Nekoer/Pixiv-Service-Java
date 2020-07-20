@@ -284,7 +284,7 @@ public class PublicServiceImpl implements PublicService {
 
 
 //            AmazingPic amazingPic = new AmazingPic();
-            List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("x_restrict", 1).eq("type", "illust").gt("total_bookmarks",3500).orderByAsc("id"));
+            List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("x_restrict", 1).eq("type", "illust").gt("total_bookmarks", 3000).gt("total_view",10000).orderByAsc("id"));
 //            amazingPic.setTotal(illustPage.getTotal());
 //            amazingPic.setCurrent(illustPage.getCurrent());
 //            amazingPic.setPages(illustPage.getPages());
