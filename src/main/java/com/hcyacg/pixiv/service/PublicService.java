@@ -47,8 +47,6 @@ public interface PublicService {
 
     /**
      *
-     * @param page 当前页
-     * @param perPage 显示的数量
      * @return 返回数据
      */
     Result amazingPic();

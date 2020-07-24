@@ -125,7 +125,7 @@ public class IllustServiceImpl implements IllustService {
                 return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId + "::" + reduction), null));
             }
 
-            List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("illust", illustId));
+            //判断是否是r18
             if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId) && redisUtils.hasKey(AppConstant.DETAIL_REDIS + "login::" + illustId)) {
                 //判断是否登录
                 if (StringUtils.isNotBlank(authorization) && !authorization.equals("0")) {
@@ -140,10 +140,13 @@ public class IllustServiceImpl implements IllustService {
                 return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
             }
 
+            //判断缓存中是否有数据
             if (redisUtils.hasKey(AppConstant.DETAIL_REDIS + illustId)) {
                 return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
             }
 
+            //如果数据库中有数据
+            List<Illust> illusts = illustMapper.selectList(new QueryWrapper<Illust>().eq("illust", illustId));
             if (CollectionUtils.isNotEmpty(illusts)) {
                 //从数据库中获取该插画信息
                 Illust illust1 = illustMapper.selectOne(new QueryWrapper<Illust>().eq("illust", illustId));
@@ -235,6 +238,7 @@ public class IllustServiceImpl implements IllustService {
 
                 return httpUtils.setBuild(res, new Result(201, "获取成功", redisUtils.get(AppConstant.DETAIL_REDIS + illustId), null));
             } else {
+                //没有数据存入数据库
                 httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/detail?illust_id=" + illustId);
                 httpGet.addHeader("App-OS", "ios");
                 httpGet.addHeader("App-OS-Version", "12.2");

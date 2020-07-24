@@ -83,7 +83,12 @@ public class HttpUtils {
     public Result buildSuccess(HttpServletResponse res, Integer code, Object data,String msg) {
 
         Result result = new Result();
-        res.setStatus(code);
+        try{
+            res.setStatus(code);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         result.setMsg(msg);
         result.setCode(code);
         result.setData(data);
@@ -91,9 +96,12 @@ public class HttpUtils {
     }
 
     public Result buildFailure(HttpServletResponse res, Integer code, String errMsg ,String msg) {
-
         Result result = new Result();
-        res.setStatus(code);
+        try{
+            res.setStatus(code);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         result.setCode(code);
         result.setMsg(msg);
         result.setError(errMsg);
