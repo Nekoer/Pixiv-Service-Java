@@ -134,11 +134,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //支持跨域
         httpSecurity.cors();
 
-        httpSecurity.authorizeRequests()
-                .mvcMatchers("/illust/**").permitAll()
-                .mvcMatchers("/public/**").permitAll()
-                .mvcMatchers("/system/**").permitAll()
-                .mvcMatchers("/account/validate").permitAll();
+//        httpSecurity.authorizeRequests()
+//                .mvcMatchers("/illust/**").permitAll()
+//                .mvcMatchers("/public/**").permitAll()
+//                .mvcMatchers("/system/**").permitAll()
+//                .mvcMatchers("/account/validate").permitAll();
 
 
         httpSecurity

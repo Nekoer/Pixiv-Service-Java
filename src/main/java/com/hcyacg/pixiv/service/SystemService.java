@@ -15,7 +15,7 @@ public interface SystemService {
      * @return 返回是否成功
      */
     //@PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-    Result runCrawlData();
+    Result runCrawlData(String time);
 
     /**
      * 判断是否是管理员

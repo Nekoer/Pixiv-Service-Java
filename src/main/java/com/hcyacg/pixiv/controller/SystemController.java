@@ -19,8 +19,8 @@ public class SystemController {
     private SystemService systemService;
 
     @RequestMapping(value = "run", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result run(){
-        return systemService.runCrawlData();
+    public Result run(@RequestParam(value = "time",required = false) String time){
+        return systemService.runCrawlData(time);
     }
 
     @RequestMapping(value = "hasRole", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
