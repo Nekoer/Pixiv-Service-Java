@@ -9,7 +9,7 @@
 #### 介绍
 http://www.acg-gov.com/ 的服务端
 
-#### 软件架构
+#### 网站架构
 ![](https://s1.ax1x.com/2020/07/19/UfSPJO.png)
 
 #### 配置要求
