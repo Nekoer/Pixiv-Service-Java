@@ -39,4 +39,5 @@ Springboot项目 Tomcat启动
 - [ ] APP开发
 - [ ] IOS开发(暂定)
 
-#### 参与贡献
+# License MIT
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNekoer%2FPixiv-Service-Java.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FNekoer%2FPixiv-Service-Java?ref=badge_large)
