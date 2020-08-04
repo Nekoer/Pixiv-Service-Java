@@ -3,6 +3,7 @@ package com.hcyacg.pixiv.service;
 import com.hcyacg.pixiv.dto.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 
 /**
@@ -27,4 +28,15 @@ public interface PayService {
      * @return
      */
     String notifyUrl(HttpServletRequest request);
+
+    /**
+     * 支付宝支付调用接口
+     *
+     * @param orderNum 订单号
+     */
+    void aliPay(String orderNum);
+
+    String notify(HttpServletRequest request, HttpServletResponse response);
+
+    boolean rsaCheckV1(HttpServletRequest request);
 }
