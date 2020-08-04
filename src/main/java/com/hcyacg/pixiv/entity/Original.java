@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 高清图
- * Date: 2020/6/23 18:26
+ * @Author: Nekoer
+ * @Desc: 高清图
+ * @Date: 2020/6/23 18:26
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Original implements Serializable {

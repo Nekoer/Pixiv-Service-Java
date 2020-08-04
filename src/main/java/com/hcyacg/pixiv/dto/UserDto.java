@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 作者类
- * Date: 2020/6/24 11:33
+ * @Author: Nekoer
+ * @Desc: 作者类
+ * @Date: 2020/6/24 11:33
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserDto implements Serializable {

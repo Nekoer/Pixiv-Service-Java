@@ -35,9 +35,9 @@ import java.lang.System;
 import java.util.*;
 
 /**
- * Created: 黄智文
- * Desc: 插画业务层实现
- * Date: 2020/5/12 17:42
+ * @Author: Nekoer
+ * @Desc: 插画业务层实现
+ * @Date: 2020/5/12 17:42
  */
 @Service
 @Transactional(rollbackFor = Exception.class)

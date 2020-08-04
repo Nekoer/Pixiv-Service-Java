@@ -3,9 +3,9 @@ package com.hcyacg.pixiv.utils;
 import org.springframework.stereotype.Component;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/5 10:53
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/5 10:53
  */
 @Component
 public class NumberUtils {

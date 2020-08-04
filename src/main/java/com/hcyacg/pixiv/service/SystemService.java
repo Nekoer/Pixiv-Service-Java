@@ -4,9 +4,9 @@ import com.hcyacg.pixiv.dto.Result;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Created: 黄智文
- * Desc: 开放接口
- * Date: 2020/7/4 17:58
+ * @Author: Nekoer
+ * @Desc: 开放接口
+ * @Date: 2020/7/4 17:58
  */
 public interface SystemService {
 

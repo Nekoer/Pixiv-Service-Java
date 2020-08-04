@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 系统权限
- * Date: 2020/6/23 18:24
+ * @Author: Nekoer
+ * @Desc: 系统权限
+ * @Date: 2020/6/23 18:24
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "role")

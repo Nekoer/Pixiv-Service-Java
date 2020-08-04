@@ -7,9 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/17 10:37
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/17 10:37
  */
 @Configuration
 @EnableScheduling

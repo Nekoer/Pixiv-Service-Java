@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/6/30 15:49
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/6/30 15:49
  */
 @Component
 public class RabbitUtils {

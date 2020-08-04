@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 系统参数
- * Date: 2020/7/10 11:14
+ * @Author: Nekoer
+ * @Desc: 系统参数
+ * @Date: 2020/7/10 11:14
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "system")

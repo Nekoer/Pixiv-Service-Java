@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/14 21:36
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/14 21:36
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "token")

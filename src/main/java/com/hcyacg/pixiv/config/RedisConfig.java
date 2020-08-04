@@ -15,9 +15,9 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/14 19:05
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/14 19:05
  */
 @Configuration
 @EnableCaching //开启注解

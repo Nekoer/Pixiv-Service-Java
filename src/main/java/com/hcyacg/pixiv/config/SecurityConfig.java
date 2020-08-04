@@ -23,9 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Created: 黄智文
- * Desc: 安全框架配置
- * Date: 2020/7/8 11:13
+ * @Author: Nekoer
+ * @Desc: 安全框架配置
+ * @Date: 2020/7/8 11:13
  */
 
 @Configuration

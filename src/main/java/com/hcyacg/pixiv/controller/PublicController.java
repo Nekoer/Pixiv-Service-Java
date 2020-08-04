@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created: 黄智文
- * Desc: 公共接口
- * Date: 2020/5/13 21:06
+ * @Author: Nekoer
+ * @Desc: 公共接口
+ * @Date: 2020/5/13 21:06
  */
 @RestController
 @RequestMapping("public")

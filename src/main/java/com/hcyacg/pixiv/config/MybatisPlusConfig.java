@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Created: 黄智文
- * Desc: mybatis-plus分页插件配置
- * Date: 2020/7/8 18:15
+ * @Author: Nekoer
+ * @Desc: mybatis-plus分页插件配置
+ * @Date: 2020/7/8 18:15
  */
 
 @EnableTransactionManagement

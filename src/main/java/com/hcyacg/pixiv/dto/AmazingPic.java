@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/8 21:16
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/8 21:16
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AmazingPic implements Serializable {

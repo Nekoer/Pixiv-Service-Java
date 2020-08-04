@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 近七天的调用数据
- * Date: 2020/5/20 23:52
+ * @Author: Nekoer
+ * @Desc: 近七天的调用数据
+ * @Date: 2020/5/20 23:52
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "log")

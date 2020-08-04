@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: pixiv用户
- * Date: 2020/6/23 18:17
+ * @Author: Nekoer
+ * @Desc: pixiv用户
+ * @Date: 2020/6/23 18:17
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "user")

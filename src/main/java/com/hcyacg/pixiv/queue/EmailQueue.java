@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * Created: 黄智文
- * Desc: 邮箱消息队列
- * Date: 2020/6/27 11:15
+ * @Author: Nekoer
+ * @Desc: 邮箱消息队列
+ * @Date: 2020/6/27 11:15
  */
 @Component
 public class EmailQueue {

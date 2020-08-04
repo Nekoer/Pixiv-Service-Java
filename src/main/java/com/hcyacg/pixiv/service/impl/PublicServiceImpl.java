@@ -27,9 +27,9 @@ import java.lang.System;
 import java.util.*;
 
 /**
- * Created: 黄智文
- * Desc: 公共接口实现类
- * Date: 2020/5/13 20:21
+ * @Author: Nekoer
+ * @Desc: 公共接口实现类
+ * @Date: 2020/5/13 20:21
  */
 @Service
 public class PublicServiceImpl implements PublicService {

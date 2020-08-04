@@ -12,9 +12,9 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * Created: 黄智文
- * Desc: 用户会员账单
- * Date: 2020/7/14 22:38
+ * @Author: Nekoer
+ * @Desc: 用户会员账单
+ * @Date: 2020/7/14 22:38
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "account_vip")

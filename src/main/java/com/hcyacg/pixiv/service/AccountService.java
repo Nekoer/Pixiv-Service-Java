@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Created: 黄智文
- * Desc: 账户接口
- * Date: 2020/5/12 15:09
+ * @Author: Nekoer
+ * @Desc: 账户接口
+ * @Date: 2020/5/12 15:09
  */
 public interface AccountService {
 

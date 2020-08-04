@@ -7,9 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/4 18:04
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/4 18:04
  */
 @RestController
 @RequestMapping("systems")

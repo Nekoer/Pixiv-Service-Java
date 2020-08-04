@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Created: 黄智文
- * Desc: 公共常量
- * Date: 2020/5/13 15:27
+ * @Author: Nekoer
+ * @Desc: 公共常量
+ * @Date: 2020/5/13 15:27
  */
 public class AppConstant {
 

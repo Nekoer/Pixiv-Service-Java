@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/14 14:47
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/14 14:47
  */
 @RestController
 @RequestMapping("vips")

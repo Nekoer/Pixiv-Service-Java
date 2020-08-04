@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author wf
- * @createTime 2020/03/11 14:08
- * 这里将JWT操作封装成了一个SpringBean，在使用的地方直接@Autowired注入即可
+ * @Author: Nekoer
+ * @Date: 2020/03/11 14:08
+ * @Desc:
+ *
  */
 @Component
 public class JwtOperation {
