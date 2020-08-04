@@ -422,8 +422,8 @@ public class AccountServiceImpl implements AccountService {
                 return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
             }
 
-            Claims claims = jwtOperation.parseJwt(authorization);
-            Account account = JSON.parseObject(String.valueOf(claims.get("account")), Account.class);
+
+            Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
 
 
             if (null == account) {
@@ -445,6 +445,91 @@ public class AccountServiceImpl implements AccountService {
 
             return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
         } catch (Exception e) {
+            e.printStackTrace();
+            return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result changeEmailCode(String authorization, String email) {
+       try{
+           if (StringUtils.isBlank(authorization)) {
+               return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
+           }
+
+           Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
+           if (null == account) {
+               return httpUtils.setBuild(res, new Result(400, "该用户未找到", null, null));
+           }
+
+           if (StringUtils.isBlank(email)){
+               return httpUtils.setBuild(res, new Result(400, "新邮箱不能为空", null, null));
+           }
+
+           if (redisUtils.hasKey(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email)) {
+               return httpUtils.setBuild(res, new Result(400, "该邮箱已发送验证码，如需再次发送，请等待三分钟", null, null));
+           }
+
+
+           if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()){
+               return httpUtils.setBuild(res, new Result(400, "该邮箱格式错误", null, null));
+           }
+
+           //获取6位验证码
+           String code = Codeutils.getRandomStr(6);
+           //存入redis，实施3分钟有效验证
+           redisUtils.set(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email, code, 3 * 60L);
+           Map<String, Object> map = new HashMap<>();
+           map.put("email", email);
+           map.put("code", code);
+           rabbitTemplate.convertAndSend("code", map);
+
+           return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
+
+       }catch (Exception e){
+           e.printStackTrace();
+           return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
+       }
+    }
+
+    @Override
+    public Result changeEmail(String authorization, String email, String code) {
+        try{
+            if (StringUtils.isBlank(authorization)) {
+                return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
+            }
+
+            if (StringUtils.isBlank(email)){
+                return httpUtils.setBuild(res, new Result(400, "新邮箱不能为空", null, null));
+            }
+
+            if (StringUtils.isBlank(code)){
+                return httpUtils.setBuild(res, new Result(400, "验证码不能为空", null, null));
+            }
+
+            Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
+            if (null == account) {
+                return httpUtils.setBuild(res, new Result(400, "该用户未找到", null, null));
+            }
+
+            if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()){
+                return httpUtils.setBuild(res, new Result(400, "该邮箱格式错误", null, null));
+            }
+
+            if (!redisUtils.hasKey(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email)){
+                return httpUtils.setBuild(res, new Result(400, "验证码错误", null, null));
+            }
+
+            if (!code.equals(redisUtils.get(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email))){
+                return httpUtils.setBuild(res, new Result(400, "验证码错误", null, null));
+            }
+            account.setEmail(email);
+            if (accountMapper.updateById(account) < 1){
+                throw new RuntimeException("更新失败");
+            }
+
+            return httpUtils.setBuild(res, new Result(201, "更新成功", jwtOperation.createJwt(account), null));
+        }catch (Exception e){
             e.printStackTrace();
             return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
         }
@@ -763,11 +848,46 @@ public class AccountServiceImpl implements AccountService {
                 return  httpUtils.setBuild(res, new Result(400, "您还未成为会员", null, null));
             }
 
-            AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id",accountInfo.getId()));
+            Boolean isOverdue = checkVipTime(accountInfo.getId());
+            if (null == isOverdue){
+                return  httpUtils.setBuild(res, new Result(500, "获取失败", null, null));
+            }else if (!isOverdue){
+                return  httpUtils.setBuild(res, new Result(400, "获取成功", "您还未成为会员", null));
+            }else {
+                AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id",accountInfo.getId()));
+                return  httpUtils.setBuild(res, new Result(201, "获取成功", accountVip, null));
+            }
 
-            return  httpUtils.setBuild(res, new Result(201, "获取成功", accountVip, null));
         }catch (Exception e){
             return httpUtils.setBuild(res, new Result(500, "获取失败", null, e.getMessage()));
+        }
+    }
+
+    @Override
+    public Boolean checkVipTime(Integer userId) {
+        try{
+            //判断是否为空
+            if (StringUtils.isBlank(String.valueOf(userId))){
+                return null;
+            }
+
+            //判断数据库是否有该用户
+            if (accountMapper.selectCount(new QueryWrapper<Account>().eq("id",userId)) < 0){
+                return null;
+            }
+
+            AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id", userId));
+            if (accountVip.getEndTime().getTime() < Calendar.getInstance().getTime().getTime()){
+                if (accountVipMapper.deleteById(accountVip.getId()) < 0){
+                    throw new RuntimeException("删除失败");
+                }
+                return false;
+            }else {
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 }

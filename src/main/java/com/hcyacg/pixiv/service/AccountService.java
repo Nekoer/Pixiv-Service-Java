@@ -74,6 +74,24 @@ public interface AccountService {
     Result updateCode(String authorization);
 
     /**
+     * 发送邮箱验证码
+     * @param authorization 用户鉴权
+     * @param email 新邮箱
+     * @return 返回验证码
+     */
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN","ROLE_SUPER_ADMIN"})
+    Result changeEmailCode(String authorization,String email);
+    /**
+     * 更改邮箱
+     * @param authorization 用户jwt
+     * @param email 新邮箱
+     * @param code 验证码
+     * @return 返回修改是否成功
+     */
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN","ROLE_SUPER_ADMIN"})
+    Result changeEmail(String authorization,String email,String code);
+
+    /**
      * 获得用户信息
      * @return 返回数据
      */
@@ -153,5 +171,17 @@ public interface AccountService {
      */
     Boolean canRegister();
 
+    /**
+     * 判断是否是会员
+     * @param authorization 用户jwt
+     * @return 返回会员信息
+     */
     Result isVip(String authorization);
+
+    /**
+     * 判断会员是否过期
+     * @param userId 用户id
+     * @return 返回是否过期
+     */
+    Boolean checkVipTime(Integer userId);
 }

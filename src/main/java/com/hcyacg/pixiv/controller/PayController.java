@@ -1,5 +1,6 @@
 package com.hcyacg.pixiv.controller;
 
+import com.alipay.api.AlipayApiException;
 import com.hcyacg.pixiv.dto.Result;
 import com.hcyacg.pixiv.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -31,5 +34,20 @@ public class PayController {
     @RequestMapping(value = "pays", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String notifyUrl(){
         return payService.notifyUrl(request);
+    }
+
+
+    @RequestMapping(value = "pay", method = RequestMethod.GET)
+    public void payMent(@RequestParam String orderNum){
+        payService.aliPay(orderNum);
+    }
+
+
+    @RequestMapping(value = "notify", method = RequestMethod.POST)
+    public String notify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
+        String str = payService.notify(request, response);
+        response.setContentType("text/html;charset=utf-8");
+        response.getWriter().println(str);
+        return str;
     }
 }
