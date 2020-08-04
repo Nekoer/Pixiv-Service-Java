@@ -78,7 +78,7 @@ public class AppConstant {
 
 
     /**
-     * 注册邮件验证码
+     * 更新用户数据 邮件验证码
      */
     public static final String CODE_EMAIL_UPDATE = "email:code:update:";
 
@@ -86,6 +86,11 @@ public class AppConstant {
      * 登录验证码
      */
     public static final String CODE_EMAIL_VALIDATE = "login:code:";
+
+    /**
+     * 更换邮箱验证码
+     */
+    public static final String CODE_EMAIL_CHANGE_EMAIL_CODE = "email:code:changeEmail::";
 
     /**
      * 是否拥有18权限
@@ -112,6 +117,7 @@ public class AppConstant {
      */
     public static final Pattern CHINA_IPHONE = Pattern.compile("^((13[0-9])|(14[0,1,4-9])|(15[0-3,5-9])|(16[2,5,6,7])|(17[0-8])|(18[0-9])|(19[0-3,5-9]))\\d{8}$");
 
+    public static final Pattern EMAIL_PATTERN = Pattern.compile("^\\w+@(\\w+\\.){1,2}\\w+$");
     /**
      * 用户封号key
      */

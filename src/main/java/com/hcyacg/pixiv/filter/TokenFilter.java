@@ -9,6 +9,8 @@ import com.hcyacg.pixiv.entity.Token;
 import com.hcyacg.pixiv.mapper.TokenMapper;
 import com.hcyacg.pixiv.mapper.LogMapper;
 import com.hcyacg.pixiv.utils.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -17,6 +19,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.Security;
 import java.util.*;
 
 /**
@@ -85,14 +89,21 @@ public class TokenFilter implements Filter {
         curRequest.set(req);
         curResponse.set(res);
 
+        String ip = "";
+        try {
+            ip = ipUtils.getIpAddr(req);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (req.getMethod().equals("OPTIONS")) {
             filterChain.doFilter(req, res);
             return;
         } else if (null != req.getHeader("referer")) {
-            if(req.getHeader("referer").contains("https://www.acg-gov.com") || req.getHeader("referer").contains("https://m.acg-gov.com") || req.getHeader("referer").contains("https://api.hcyacg.com")){
+            if (req.getHeader("referer").contains("https://www.acg-gov.com") || req.getHeader("referer").contains("https://m.acg-gov.com") || req.getHeader("referer").contains("https://api.hcyacg.com")) {
                 filterChain.doFilter(req, res);
+                return;
             }
-            return;
         }
 
 
@@ -156,7 +167,6 @@ public class TokenFilter implements Filter {
                 }
             } else {
                 //token未填写,根据ip来限制
-                String ip = "";
                 try {
                     ip = ipUtils.getIpAddr(req);
                 } catch (Exception e) {
@@ -166,18 +176,17 @@ public class TokenFilter implements Filter {
                 System.out.println(ip);
                 if (ip.matches("^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$")) {
                     //如果redis缓存中存在token，则进行自减
-                    if (redisUtils.hasKey(ip)){
+                    if (redisUtils.hasKey(ip)) {
                         if (String.valueOf(redisUtils.get(ip)).matches(AppConstant.ISNUMBER) && Integer.parseInt(String.valueOf(redisUtils.get(ip))) > 0) {
                             redisUtils.decr(ip, 1);
                             filterChain.doFilter(req, res);
-                        }else {
+                        } else {
                             res.getWriter().write(JSONObject.toJSONString(new Result(400, "请求失败", "", "调用次数已超标,请一分钟后再试")));
                         }
-                    }else {
+                    } else {
                         redisUtils.set(ip, 10, 60L);
                         filterChain.doFilter(req, res);
                     }
-
 
 
                 } else {
@@ -199,7 +208,7 @@ public class TokenFilter implements Filter {
         } catch (Exception e) {
             e.printStackTrace();
             res.getWriter().write(JSONObject.toJSONString(new Result(500, "请求失败", "", "错误" + e.getMessage())));
-        }finally {
+        } finally {
             curRequest.remove();
             curResponse.remove();
         }
@@ -210,5 +219,6 @@ public class TokenFilter implements Filter {
     public void destroy() {
 
     }
+
 
 }
