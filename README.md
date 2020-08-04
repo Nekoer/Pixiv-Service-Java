@@ -1,7 +1,7 @@
 <h1><p align="center">pixiv-service</p></h1>
 <p align="center">
 <a href="https://img.shields.io/badge/version-1.0.5-40c4ff.svg?style=flat"><img src="https://img.shields.io/badge/version-1.0.5-40c4ff.svg?style=flat" alt="version-1.0.5"></a>
-<a href="https://img.shields.io/badge/license-Apache-orange.svg?style=flat"><img src="https://img.shields.io/badge/license-Apache-orange.svg?style=flat" alt="license-Apache"></a>
+<a href="https://img.shields.io/badge/license-Apache 2.0-orange.svg?style=flat"><img src="https://img.shields.io/badge/license-Apache 2.0-orange.svg?style=flat" alt="license-Apache 2.0"></a>
 <a href="https://img.shields.io/badge/author-Nekoer-6cf.svg?style=flat"><img src="https://img.shields.io/badge/author-Nekoer-6cf.svg?style=flat" alt="author-Nekoer"></a>
 </p>
 
