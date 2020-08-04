@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created: 黄智文
- * Desc: 账户控制器
- * Date: 2020/6/15 13:44
+ * @Author: Nekoer
+ * @Desc: 账户控制器
+ * @Date: 2020/6/15 13:44
  */
 @RestController
 @RequestMapping("accounts")

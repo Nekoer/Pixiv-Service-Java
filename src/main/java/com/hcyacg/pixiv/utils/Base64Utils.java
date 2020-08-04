@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/6/30 18:38
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/6/30 18:38
  */
 @Component
 public class Base64Utils {

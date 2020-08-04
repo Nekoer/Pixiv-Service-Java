@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * Created: 黄智文
- * Desc: 会员套餐
- * Date: 2020/7/14 14:26
+ * @Author: Nekoer
+ * @Desc: 会员套餐
+ * @Date: 2020/7/14 14:26
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "vip_package")

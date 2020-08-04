@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created: 黄智文
- * Desc: 公共接口
- * Date: 2020/5/13 20:19
+ * @Author: Nekoer
+ * @Desc: 公共接口
+ * @Date: 2020/5/13 20:19
  */
 public interface PublicService {
 

@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created: 黄智文
- * Desc: 图片爬取消息队列
- * Date: 2020/6/27 11:17
+ * @Author: Nekoer
+ * @Desc: 图片爬取消息队列
+ * @Date: 2020/6/27 11:17
  */
 @Component
 public class PicQueue {

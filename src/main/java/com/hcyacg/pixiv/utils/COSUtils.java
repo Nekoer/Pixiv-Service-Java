@@ -20,9 +20,9 @@ import java.net.URL;
 import java.util.Date;
 
 /**
- * Created: 黄智文
- * Desc: 腾讯对象存储
- * Date: 2020/6/12 14:39
+ * @Author: Nekoer
+ * @Desc: 腾讯对象存储
+ * @Date: 2020/6/12 14:39
  */
 @Component
 public class COSUtils {

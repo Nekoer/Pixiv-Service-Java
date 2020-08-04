@@ -3,9 +3,9 @@ package com.hcyacg.pixiv.service;
 import com.hcyacg.pixiv.dto.Result;
 
 /**
- * Created: 黄智文
- * Desc: 会员
- * Date: 2020/7/14 14:31
+ * @Author: Nekoer
+ * @Desc: 会员
+ * @Date: 2020/7/14 14:31
  */
 public interface VipService {
 

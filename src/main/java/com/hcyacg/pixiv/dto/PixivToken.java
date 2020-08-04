@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/12 15:48
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/12 15:48
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PixivToken implements Serializable {

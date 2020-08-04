@@ -8,9 +8,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/14 22:24
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/14 22:24
  */
 @Component
 public class IpUtils {

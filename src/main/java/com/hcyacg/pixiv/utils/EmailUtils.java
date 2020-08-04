@@ -15,9 +15,9 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * Created: 黄智文
- * Desc: 邮箱工具类
- * Date: 2020/3/15 16:21
+ * @Author: Nekoer
+ * @Desc: 邮箱工具类
+ * @Date: 2020/3/15 16:21
  */
 @Component
 public class EmailUtils {

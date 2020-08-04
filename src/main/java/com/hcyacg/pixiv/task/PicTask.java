@@ -21,9 +21,9 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 /**
- * Created: 黄智文
- * Desc: 定时爬取图片数据存入数据库
- * Date: 2020/6/25 11:50
+ * @Author: Nekoer
+ * @Desc: 定时爬取图片数据存入数据库
+ * @Date: 2020/6/25 11:50
  */
 @Component
 public class PicTask {

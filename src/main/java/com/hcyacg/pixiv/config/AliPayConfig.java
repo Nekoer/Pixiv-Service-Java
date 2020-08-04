@@ -11,9 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/3/19 16:09
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/3/19 16:09
  */
 @Configuration
 public class AliPayConfig {

@@ -18,9 +18,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created: 黄智文
- * Desc: 每天凌晨定时发送邮箱，关于接口调用的信息
- * Date: 2020/5/17 10:47
+ * @Author: Nekoer
+ * @Desc: 每天凌晨定时发送邮箱，关于接口调用的信息
+ * @Date: 2020/5/17 10:47
  */
 @Component
 public class EmailTask {

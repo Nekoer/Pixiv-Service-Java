@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/12 18:12
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/12 18:12
  */
 @Component
 public class HttpUtils {

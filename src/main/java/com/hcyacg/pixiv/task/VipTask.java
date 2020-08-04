@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created: 黄智文
- * Desc: 会员
- * Date: 2020/7/23 19:40
+ * @Author: Nekoer
+ * @Desc: 会员
+ * @Date: 2020/7/23 19:40
  */
 @Component
 public class VipTask {

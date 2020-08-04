@@ -14,9 +14,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created: 黄智文
- * Desc: Minio工具包
- * Date: 2020/6/23 14:38
+ * @Author: Nekoer
+ * @Desc: Minio工具包
+ * @Date: 2020/6/23 14:38
  */
 @Component
 public class MinioUilts {

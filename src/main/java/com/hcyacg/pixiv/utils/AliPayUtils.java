@@ -15,9 +15,9 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 
 /**
- * Created: Nekoer
- * Desc: 支付宝当面付
- * Date: 2020/7/29 10:26
+ * @Author: Nekoer
+ * @Desc: 支付宝当面付
+ * @Date: 2020/7/29 10:26
  */
 @Component
 public class AliPayUtils {

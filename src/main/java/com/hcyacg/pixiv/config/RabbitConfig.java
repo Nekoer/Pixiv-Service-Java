@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/6/15 14:03
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/6/15 14:03
  */
 
 @Configuration

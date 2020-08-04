@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 插画的标签
- * Date: 2020/6/24 11:22
+ * @Author: Nekoer
+ * @Desc: 插画的标签
+ * @Date: 2020/6/24 11:22
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "tagofillust")

@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created: 黄智文
- * Desc: 插画详情类
- * Date: 2020/6/24 11:32
+ * @Author: Nekoer
+ * @Desc: 插画详情类
+ * @Date: 2020/6/24 11:32
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class IllustDto implements Serializable {

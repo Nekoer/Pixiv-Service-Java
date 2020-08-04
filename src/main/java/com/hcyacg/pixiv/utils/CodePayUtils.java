@@ -13,9 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * Created: 黄智文
- * Desc: 支付工具类
- * Date: 2020/7/13 12:17
+ * @Author: Nekoer
+ * @Desc: 支付工具类
+ * @Date: 2020/7/13 12:17
  */
 @Component
 public class CodePayUtils {

@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/14 14:38
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/14 14:38
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class VipDto implements Serializable {

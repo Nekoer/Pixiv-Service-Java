@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 会员
- * Date: 2020/7/14 14:25
+ * @Author: Nekoer
+ * @Desc: 会员
+ * @Date: 2020/7/14 14:25
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "vip")

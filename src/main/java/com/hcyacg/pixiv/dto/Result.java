@@ -8,9 +8,9 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * Created: 黄智文
- * Desc: 结果集
- * Date: 2020/5/10 14:29
+ * @Author: Nekoer
+ * @Desc: 结果集
+ * @Date: 2020/5/10 14:29
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result implements Serializable  {

@@ -11,9 +11,9 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * Created: 黄智文
- * Desc: 用户账户
- * Date: 2020/6/15 12:26
+ * @Author: Nekoer
+ * @Desc: 用户账户
+ * @Date: 2020/6/15 12:26
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @TableName(value = "account")

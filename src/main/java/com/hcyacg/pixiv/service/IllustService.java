@@ -8,9 +8,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Created: 黄智文
- * Desc: 插图业务层接口
- * Date: 2020/5/12 17:39
+ * @Author: Nekoer
+ * @Desc: 插图业务层接口
+ * @Date: 2020/5/12 17:39
  */
 public interface IllustService {
 

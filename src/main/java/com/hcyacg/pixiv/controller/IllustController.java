@@ -12,9 +12,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/5/12 17:34
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/5/12 17:34
  */
 @RestController
 @RequestMapping("illusts")

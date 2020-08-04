@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 
 /**
- * Created: 黄智文
- * Desc: 支付接口
- * Date: 2020/7/13 12:52
+ * @Author: Nekoer
+ * @Desc: 支付接口
+ * @Date: 2020/7/13 12:52
  */
 public interface PayService {
 

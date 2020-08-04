@@ -38,9 +38,9 @@ import java.security.MessageDigest;
 import java.util.*;
 
 /**
- * Created: 黄智文
- * Desc:
- * Date: 2020/7/13 12:54
+ * @Author: Nekoer
+ * @Desc:
+ * @Date: 2020/7/13 12:54
  */
 @Service
 @Transactional(rollbackFor = Exception.class)

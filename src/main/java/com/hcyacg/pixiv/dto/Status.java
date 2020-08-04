@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created: 黄智文
- * Desc: 状态枚举
- * Date: 2020/5/13 14:03
+ * @Author: Nekoer
+ * @Desc: 状态枚举
+ * @Date: 2020/5/13 14:03
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract  class Status implements Serializable {
