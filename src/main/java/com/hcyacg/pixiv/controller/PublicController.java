@@ -4,10 +4,7 @@ import com.hcyacg.pixiv.dto.Result;
 import com.hcyacg.pixiv.service.PublicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: Nekoer
@@ -56,7 +53,7 @@ public class PublicController {
     }
 
     @RequestMapping(value = "setu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result amazingPic(){
-        return publicService.amazingPic();
+    public Result amazingPic(@RequestHeader(value = "token") String token){
+        return publicService.amazingPic(token);
     }
 }

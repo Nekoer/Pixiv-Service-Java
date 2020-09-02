@@ -11,6 +11,7 @@ import com.hcyacg.pixiv.mapper.LogMapper;
 import com.hcyacg.pixiv.utils.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -30,6 +31,7 @@ import java.util.*;
  */
 
 @WebFilter("/*")
+@Transactional(rollbackFor = Exception.class)
 public class TokenFilter implements Filter {
 
     private static ThreadLocal<HttpServletRequest> curRequest = new ThreadLocal<>();
@@ -85,7 +87,7 @@ public class TokenFilter implements Filter {
         res.setCharacterEncoding("UTF-8");
         res.setContentType("application/json; charset=utf-8");
 
-        System.out.println(AppConstant.SDF.format(new Date()) + "调用");
+//        System.out.println(AppConstant.SDF.format(new Date()) + "调用");
         curRequest.set(req);
         curResponse.set(res);
 
@@ -119,8 +121,20 @@ public class TokenFilter implements Filter {
                 //判断token是否存在数据库中
                 List<Token> accessToken = accessTokenMapper.selectList(new QueryWrapper<Token>().eq("token", token));
                 if (accessToken.size() > 0) {
+
                     //增加用户调用次数
-                    rabbitUtils.convertAndSend("token", token);
+                    if (accessTokenMapper.selectCount(new QueryWrapper<Token>().eq("token", String.valueOf(token))) > 0) {
+                        Token tokenData = accessTokenMapper.selectOne(new QueryWrapper<Token>().eq("token", String.valueOf(token)));
+                        if (tokenData.getTotal() == null || tokenData.getTotal() <= 0){
+                            tokenData.setTotal(1);
+                        }else {
+                            tokenData.setTotal(tokenData.getTotal() + 1);
+                        }
+                        if (accessTokenMapper.updateById(tokenData) < 1) {
+                            throw new RuntimeException("添加失败");
+                        }
+                        System.out.println("用户id" + tokenData.getAccountId() + "添加次数");
+                    }
                     //判断token是否存在redis缓存中
                     if (!StringUtils.isBlank(String.valueOf(redisUtils.get(token))) && String.valueOf(redisUtils.get(token)).matches(AppConstant.ISNUMBER)) {
                         int number = Integer.parseInt(String.valueOf(redisUtils.get(token)));

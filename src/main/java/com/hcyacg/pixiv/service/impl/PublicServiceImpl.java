@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.System;
@@ -35,7 +37,10 @@ import java.util.*;
 public class PublicServiceImpl implements PublicService {
     @Autowired
     private HttpUtils httpUtils;
-
+    @Autowired
+    private HttpServletResponse res;
+    @Autowired
+    private HttpServletRequest req;
     @Autowired
     private RedisUtils redisUtils;
     @Autowired
@@ -46,6 +51,8 @@ public class PublicServiceImpl implements PublicService {
     private UserMapper userMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private TokenMapper tokenMapper;
     @Autowired
     private TagOfIllustMapper tagOfIllustMapper;
     @Autowired
@@ -275,8 +282,13 @@ public class PublicServiceImpl implements PublicService {
     }
 
     @Override
-    public Result amazingPic() {
+    public Result amazingPic(String token) {
         try {
+
+            if (tokenMapper.selectCount(new QueryWrapper<Token>().eq("token",token)) < 1){
+                return httpUtils.setBuild(res,new Result(400, "token不存在", null, null));
+            }
+
 
             Date date = new Date();
             String time = AppConstant.SDF.format(date);
@@ -355,10 +367,10 @@ public class PublicServiceImpl implements PublicService {
 //            amazingPic.setIllustDtos(illustDtos);
 
 
-            return new Result(201, "获取成功", illustDto, null);
+            return httpUtils.setBuild(res,new Result(201, "获取成功", illustDto, null));
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(500, "获取失败", null, "服务器内部错误");
+            return httpUtils.setBuild(res,new Result(500, "获取失败", null, "服务器内部错误"));
         }
     }
 }

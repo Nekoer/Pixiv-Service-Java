@@ -14,22 +14,23 @@ import java.util.Map;
  * @Date 2020/9/2 21:36
  * @Desc
  */
-@Component
+//@Component
 public class TokenQueue {
 
     @Autowired
     private TokenMapper tokenMapper;
 
 
-    @RabbitListener(queues = "token")
+    //@RabbitListener(queues = "tokenTotal")
     public void receive(Object token) {
         try {
             if (tokenMapper.selectCount(new QueryWrapper<Token>().eq("token", String.valueOf(token))) > 0) {
                 Token tokenData = tokenMapper.selectOne(new QueryWrapper<Token>().eq("token", String.valueOf(token)));
                 tokenData.setTotal(tokenData.getTotal() == 0 ? 1 : tokenData.getTotal() + 1);
-                if (tokenMapper.updateById(tokenData) < 1){
+                if (tokenMapper.updateById(tokenData) < 1) {
                     throw new RuntimeException("添加失败");
                 }
+                System.out.println("用户id" + tokenData.getAccountId() + "添加次数");
             }
         } catch (Exception e) {
             e.printStackTrace();

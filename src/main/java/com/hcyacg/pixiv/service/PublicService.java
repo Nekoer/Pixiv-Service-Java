@@ -49,5 +49,5 @@ public interface PublicService {
      *
      * @return 返回数据
      */
-    Result amazingPic();
+    Result amazingPic(String token);
 }

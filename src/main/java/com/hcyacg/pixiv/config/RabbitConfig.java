@@ -67,7 +67,7 @@ public class RabbitConfig {
 
     @Bean
     Binding bindingLogDirect() {
-        return BindingBuilder.bind(picDirectQueue()).to(picDirectExchange()).with("log");
+        return BindingBuilder.bind(logDirectQueue()).to(logDirectExchange()).with("log");
     }
 
 
@@ -83,23 +83,23 @@ public class RabbitConfig {
 
     @Bean
     Binding bindingAvatarDirect() {
-        return BindingBuilder.bind(picDirectQueue()).to(picDirectExchange()).with("avatar");
+        return BindingBuilder.bind(avatarDirectQueue()).to(avatarDirectExchange()).with("avatar");
     }
 
-    @Bean
-    public Queue tokenDirectQueue() {
-        return new Queue("token",true);
-    }
-
-    @Bean
-    DirectExchange tokenDirectExchange() {
-        return new DirectExchange("token",true,false);
-    }
-
-    @Bean
-    Binding bindingTokenDirect() {
-        return BindingBuilder.bind(picDirectQueue()).to(picDirectExchange()).with("token");
-    }
+//    @Bean
+//    public Queue tokenDirectQueue() {
+//        return new Queue("tokenTotal",true);
+//    }
+//
+//    @Bean
+//    DirectExchange tokenDirectExchange() {
+//        return new DirectExchange("tokenTotal",true,false);
+//    }
+//
+//    @Bean
+//    Binding bindingTokenDirect() {
+//        return BindingBuilder.bind(tokenDirectQueue()).to(tokenDirectExchange()).with("tokenTotal");
+//    }
 
     @Bean
     DirectExchange lonelyDirectExchange() {
