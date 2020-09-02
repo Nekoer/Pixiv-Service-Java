@@ -25,12 +25,15 @@ public class Token implements Serializable {
     private Integer line;
     @TableField(value = "account_id")
     private Integer accountId;
+    @TableField(value = "total")
+    private Integer total;
 
-    public Token(Integer id, String token, Integer line, Integer accountId) {
+    public Token(Integer id, String token, Integer line, Integer accountId, Integer total) {
         Id = id;
         this.token = token;
         this.line = line;
         this.accountId = accountId;
+        this.total = total;
     }
 
     public Token() {
@@ -68,6 +71,14 @@ public class Token implements Serializable {
         this.accountId = accountId;
     }
 
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
@@ -75,6 +86,7 @@ public class Token implements Serializable {
                 ", token='" + token + '\'' +
                 ", line=" + line +
                 ", accountId=" + accountId +
+                ", total=" + total +
                 '}';
     }
 }

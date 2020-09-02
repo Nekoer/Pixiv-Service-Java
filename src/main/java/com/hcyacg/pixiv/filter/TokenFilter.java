@@ -112,39 +112,15 @@ public class TokenFilter implements Filter {
             //添加访问次数
             rabbitUtils.convertAndSend("log", 1);
 
-
             //判断权限
             String token = req.getHeader("token");
             //token不为空
-            if (!StringUtils.isBlank(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 //判断token是否存在数据库中
                 List<Token> accessToken = accessTokenMapper.selectList(new QueryWrapper<Token>().eq("token", token));
                 if (accessToken.size() > 0) {
-                    //判断token是否存在redis缓存中
-                    if (!StringUtils.isBlank(String.valueOf(redisUtils.get(token))) && String.valueOf(redisUtils.get(token)).matches(AppConstant.ISNUMBER)) {
-                        int number = Integer.parseInt(String.valueOf(redisUtils.get(token)));
-
-                        //调用次数已用完
-                        if (number <= 0) {
-                            res.getWriter().write(JSONObject.toJSONString(new Result(400, "请求失败", "", "调用次数已归零，请1分钟后再试")));
-                            return;
-                        }
-
-                        //自减1次
-                        redisUtils.decr(token, 1);
-                    } else {
-                        //添加token缓存,进行1分钟时间策略
-                        redisUtils.set(accessToken.get(0).getToken(), accessToken.get(0).getLine() - 1, 60L);
-                    }
-                    filterChain.doFilter(req, res);
-                } else {
-                    res.getWriter().write(JSONObject.toJSONString(new Result(400, "请求失败", "", "该token不存在数据库中")));
-                }
-            } else if (!StringUtils.isBlank(req.getParameter("token"))) {
-                token = req.getParameter("token");
-                //判断token是否存在数据库中
-                List<Token> accessToken = accessTokenMapper.selectList(new QueryWrapper<Token>().eq("token", token));
-                if (accessToken.size() > 0) {
+                    //增加用户调用次数
+                    rabbitUtils.convertAndSend("token", token);
                     //判断token是否存在redis缓存中
                     if (!StringUtils.isBlank(String.valueOf(redisUtils.get(token))) && String.valueOf(redisUtils.get(token)).matches(AppConstant.ISNUMBER)) {
                         int number = Integer.parseInt(String.valueOf(redisUtils.get(token)));

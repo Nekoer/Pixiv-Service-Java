@@ -87,6 +87,21 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue tokenDirectQueue() {
+        return new Queue("token",true);
+    }
+
+    @Bean
+    DirectExchange tokenDirectExchange() {
+        return new DirectExchange("token",true,false);
+    }
+
+    @Bean
+    Binding bindingTokenDirect() {
+        return BindingBuilder.bind(picDirectQueue()).to(picDirectExchange()).with("token");
+    }
+
+    @Bean
     DirectExchange lonelyDirectExchange() {
         return new DirectExchange("lonelyDirectExchange");
     }
