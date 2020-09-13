@@ -269,8 +269,14 @@ public class AccountServiceImpl implements AccountService {
             }
 
             List<Account> list = accountMapper.selectList(new QueryWrapper<Account>().eq("username", userName));
-            if (list.size() == 0) {
-                return httpUtils.setBuild(res, new Result(400, "该用户名不存在", null, null));
+            List<Account> listEmail = accountMapper.selectList(new QueryWrapper<Account>().eq("email",userName));
+
+            if (list.size() == 0 && listEmail.size() == 0) {
+                return httpUtils.setBuild(res, new Result(400, "该账号不存在", null, null));
+            }
+
+            if (list.size() == 0 && listEmail.size() != 0){
+                list = listEmail;
             }
 
             if (StringUtils.isBlank(passWord)) {
