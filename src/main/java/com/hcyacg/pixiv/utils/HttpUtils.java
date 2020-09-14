@@ -85,8 +85,8 @@ public class HttpUtils {
         Result result = new Result();
         try{
             res.setStatus(code);
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
+
         }
 
         result.setMsg(msg);
@@ -99,8 +99,7 @@ public class HttpUtils {
         Result result = new Result();
         try{
             res.setStatus(code);
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
         }
         result.setCode(code);
         result.setMsg(msg);

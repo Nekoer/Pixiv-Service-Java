@@ -52,7 +52,7 @@ public class PicTask {
      * page [1-n]
      * date '2015-04-01' (仅过去排行榜)
      */
-    @Scheduled(cron = "0 1 0 * * ?")
+    @Scheduled(cron = "0 0 0,6,12,18 * * ? ")
     public void CrawlMorningData() {
         Date dd = new Date();
         Calendar calendar = Calendar.getInstance();

@@ -52,13 +52,9 @@ public class MinioUilts {
             MinioClient minioClient = new MinioClient(host, AccessKey, SecretKey);
             //MinioClient minioClient = new MinioClient("http://103.133.179.35:9000/", "admin", "243462032");
             boolean isExist = minioClient.bucketExists(thumbBucket);
-            if(isExist) {
-                System.out.println("Bucket already exists.");
-            } else {
+            if(!isExist) {
                 minioClient.makeBucket(thumbBucket);
             }
-
-
             minioClient.putObject(thumbBucket,fileName,in,putObjectOptions);
 
             return minioClient.getObjectUrl(thumbBucket,fileName).replace(host,"");
@@ -74,9 +70,7 @@ public class MinioUilts {
             MinioClient minioClient = new MinioClient(host, AccessKey, SecretKey);
             //MinioClient minioClient = new MinioClient("http://103.133.179.35:9000/", "admin", "243462032");
             boolean isExist = minioClient.bucketExists(originalBucket);
-            if(isExist) {
-                System.out.println("Bucket already exists.");
-            } else {
+            if(!isExist) {
                 minioClient.makeBucket(originalBucket);
             }
 
@@ -95,9 +89,7 @@ public class MinioUilts {
             MinioClient minioClient = new MinioClient(host, AccessKey, SecretKey);
             //MinioClient minioClient = new MinioClient("http://103.133.179.35:9000/", "admin", "243462032");
             boolean isExist = minioClient.bucketExists(avatarBucket);
-            if(isExist) {
-                System.out.println("Bucket already exists.");
-            } else {
+            if(!isExist) {
                 minioClient.makeBucket(avatarBucket);
             }
 
@@ -116,9 +108,7 @@ public class MinioUilts {
             MinioClient minioClient = new MinioClient(host, AccessKey, SecretKey);
             //MinioClient minioClient = new MinioClient("http://103.133.179.35:9000/", "admin", "243462032");
             boolean isExist = minioClient.bucketExists(accountBucket);
-            if(isExist) {
-                System.out.println("Bucket already exists.");
-            } else {
+            if(!isExist) {
                 minioClient.makeBucket(accountBucket);
             }
 
@@ -131,11 +121,4 @@ public class MinioUilts {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        MinioUilts minioUilts = new MinioUilts();
-        FileInputStream fileInputStream = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\图片1.png"));
-        PutObjectOptions putObjectOptions = new PutObjectOptions(fileInputStream.available(), -1);
-        putObjectOptions.setContentType("image/png");
-        minioUilts.uploadThumbImage("1.png",fileInputStream,putObjectOptions);
-    }
 }
