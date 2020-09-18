@@ -93,6 +93,12 @@ public class AppConstant {
     public static final String CODE_EMAIL_CHANGE_EMAIL_CODE = "email:code:changeEmail::";
 
     /**
+     * 忘记密码状态 发送验证码
+     */
+    public static final String CODE_EMAIL_FORGET_CHANGE_PASSWORD_CODE = "email:code:forget:change:password::";
+
+
+    /**
      * 是否拥有18权限
      */
     public static final Integer ACCOUNT_HAS_PRON = 1;

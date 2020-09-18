@@ -301,41 +301,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Result code(String email) {
-        try {
-            if (!canRegister()){
-                return httpUtils.setBuild(res, new Result(403, "本站已暂停注册", null, null));
-            }
-
-            if (redisUtils.hasKey(AppConstant.CODE_EMAIL + email)) {
-                return httpUtils.setBuild(res, new Result(400, "该邮箱已发送验证码，如需再次发送，请等待三分钟", null, null));
-            }
-
-            if (StringUtils.isBlank(email)) {
-                return httpUtils.setBuild(res, new Result(400, "邮箱不能为空", null, null));
-            }
-
-            List<Account> account = accountMapper.selectList(new QueryWrapper<Account>().eq("email", email));
-            if (account.size() >= 1) {
-                return httpUtils.setBuild(res, new Result(400, "该邮箱已被注册", null, null));
-            }
-            //获取6位验证码
-            String code = Codeutils.getRandomStr(6);
-            //存入redis，实施3分钟有效验证
-            redisUtils.set(AppConstant.CODE_EMAIL + email, code, 3 * 60L);
-            Map<String, Object> map = new HashMap<>();
-            map.put("email", email);
-            map.put("code", code);
-            rabbitTemplate.convertAndSend("code", map);
-
-            return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
-        }
-    }
-
-    @Override
     public void ValidateCode() {
         try {
             Map<String, Object> map = validateCodeUtils.drawImage();
@@ -418,84 +383,6 @@ public class AccountServiceImpl implements AccountService {
             e.printStackTrace();
             return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
         }
-    }
-
-    @Override
-    public Result updateCode(String authorization) {
-        try {
-
-            if (StringUtils.isBlank(authorization)) {
-                return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
-            }
-
-
-            Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
-
-
-            if (null == account) {
-                return httpUtils.setBuild(res, new Result(400, "该用户未找到", null, null));
-            }
-
-            if (redisUtils.hasKey(AppConstant.CODE_EMAIL_UPDATE + account.getEmail())) {
-                return httpUtils.setBuild(res, new Result(400, "该邮箱已发送验证码，如需再次发送，请等待三分钟", null, null));
-            }
-
-            //获取6位验证码
-            String code = Codeutils.getRandomStr(6);
-            //存入redis，实施3分钟有效验证
-            redisUtils.set(AppConstant.CODE_EMAIL_UPDATE + account.getEmail(), code, 3 * 60L);
-            Map<String, Object> map = new HashMap<>();
-            map.put("email", account.getEmail());
-            map.put("code", code);
-            rabbitTemplate.convertAndSend("code", map);
-
-            return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
-        }
-    }
-
-    @Override
-    public Result changeEmailCode(String authorization, String email) {
-       try{
-           if (StringUtils.isBlank(authorization)) {
-               return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
-           }
-
-           Account account = JSON.parseObject(String.valueOf(jwtOperation.parseJwt(authorization).get("account")), Account.class);
-           if (null == account) {
-               return httpUtils.setBuild(res, new Result(400, "该用户未找到", null, null));
-           }
-
-           if (StringUtils.isBlank(email)){
-               return httpUtils.setBuild(res, new Result(400, "新邮箱不能为空", null, null));
-           }
-
-           if (redisUtils.hasKey(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email)) {
-               return httpUtils.setBuild(res, new Result(400, "该邮箱已发送验证码，如需再次发送，请等待三分钟", null, null));
-           }
-
-
-           if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()){
-               return httpUtils.setBuild(res, new Result(400, "该邮箱格式错误", null, null));
-           }
-
-           //获取6位验证码
-           String code = Codeutils.getRandomStr(6);
-           //存入redis，实施3分钟有效验证
-           redisUtils.set(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email, code, 3 * 60L);
-           Map<String, Object> map = new HashMap<>();
-           map.put("email", email);
-           map.put("code", code);
-           rabbitTemplate.convertAndSend("code", map);
-
-           return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
-
-       }catch (Exception e){
-           e.printStackTrace();
-           return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
-       }
     }
 
     @Override
@@ -819,9 +706,7 @@ public class AccountServiceImpl implements AccountService {
         try{
             if (systemMapper.selectCount(new QueryWrapper<Systems>().eq("name",AppConstant.SYSTEM_ALLOWED_TO_REGISTER)) > 0){
                 Systems system = systemMapper.selectOne(new QueryWrapper<Systems>().eq("name", AppConstant.SYSTEM_ALLOWED_TO_REGISTER));
-                if (system.getParameter().equals("false")){
-                    return  false;
-                }
+                return !system.getParameter().equals("false");
             }
             return true;
         }catch (Exception e){
@@ -894,6 +779,64 @@ public class AccountServiceImpl implements AccountService {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public Result checkEmailForAccountIsExist(String email) {
+        try{
+            if (StringUtils.isBlank(email)){
+                return httpUtils.setBuild(res,new Result(400,"邮箱不能为空",false,null));
+            }
+
+            if (accountMapper.selectCount(new QueryWrapper<Account>().eq("email",email))<1){
+                return httpUtils.setBuild(res,new Result(400,"没有该账户",false,null));
+            }
+
+            return httpUtils.setBuild(res,new Result(201,"获取成功",true,null));
+        }catch (Exception e){
+            e.printStackTrace();
+            return httpUtils.setBuild(res,new Result(500,"服务器错误",false,e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result changePassWordForForget(String email, String password, String confirm, String vCode) {
+        try{
+            if (StringUtils.isBlank(email)){
+                return httpUtils.setBuild(res,new Result(400,"邮箱不能为空",null,null));
+            }
+
+            if (accountMapper.selectCount(new QueryWrapper<Account>().eq("email",email))<1){
+                return httpUtils.setBuild(res,new Result(400,"没有该账户",false,null));
+            }
+
+            if (StringUtils.isBlank(password)){
+                return httpUtils.setBuild(res,new Result(400,"密码不能为空",null,null));
+            }
+            if (StringUtils.isBlank(confirm)){
+                return httpUtils.setBuild(res,new Result(400,"确认密码不能为空",null,null));
+            }
+            if (StringUtils.isBlank(vCode)){
+                return httpUtils.setBuild(res,new Result(400,"验证码不能为空",null,null));
+            }
+            if (!password.equals(confirm)){
+                return httpUtils.setBuild(res,new Result(400,"两次密码不正确",null,null));
+            }
+            String code = String.valueOf(redisUtils.get(AppConstant.CODE_EMAIL_FORGET_CHANGE_PASSWORD_CODE + email));
+            if (!code.equals(vCode)){
+                return httpUtils.setBuild(res,new Result(400,"验证码错误",null,null));
+            }
+
+            Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("email", email));
+            account.setPassWord(DigestUtils.md5Hex(password));
+            if (accountMapper.updateById(account) < 1){
+                throw new RuntimeException("修改失败");
+            }
+            return httpUtils.setBuild(res,new Result(201,"修改成功",true,null));
+        }catch (Exception e){
+            e.printStackTrace();
+            return httpUtils.setBuild(res,new Result(500,"服务器错误",null,e.getMessage()));
         }
     }
 }

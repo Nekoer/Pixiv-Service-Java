@@ -32,21 +32,6 @@ public class AccountController {
         return accountService.login(userName, passWord, code);
     }
 
-    @RequestMapping(value = "code", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result sendCode(@RequestParam(value = "email") String email) {
-        return accountService.code(email);
-    }
-
-    @RequestMapping(value = "updateCode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result updateCode(@RequestHeader(value = "authorization") String authorization) {
-        return accountService.updateCode(authorization);
-    }
-
-    @RequestMapping(value = "changeEmailCode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result changeEmailCode(@RequestHeader(value = "authorization") String authorization,@RequestParam(value = "email") String email) {
-        return accountService.changeEmailCode(authorization,email);
-    }
-
     @RequestMapping(value = "updatePassWord", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Result updatePassWord(@RequestHeader(value = "authorization") String authorization, @RequestParam(value = "originalPassWord") String originalPassWord, @RequestParam(value = "passWord") String passWord, @RequestParam(value = "confirm") String confirm, @RequestParam(value = "vCode") String vCode) {
         return accountService.updatePassWord(authorization, originalPassWord, passWord, confirm, vCode);
@@ -111,5 +96,10 @@ public class AccountController {
     @RequestMapping(value = "vips", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Result vips(@RequestHeader(value = "authorization") String authorization) {
         return accountService.isVip(authorization);
+    }
+
+    @RequestMapping(value = "emails/exists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result checkEmailForAccountIsExist(@RequestParam(value = "email") String email) {
+        return accountService.checkEmailForAccountIsExist(email);
     }
 }

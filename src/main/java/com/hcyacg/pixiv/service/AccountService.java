@@ -41,12 +41,6 @@ public interface AccountService {
      */
     Result login(String userName,String passWord,String code);
 
-    /**
-     * 发送邮箱验证码
-     * @param email 邮箱
-     * @return 返回验证码
-     */
-    Result code(String email);
 
     /**
      * 获取图形验证码
@@ -65,22 +59,6 @@ public interface AccountService {
     @PreAuthorize("hasRole('ROLE_CHANGE') AND hasRole('ROLE_USER')")
     Result updatePassWord(String authorization,String originalPassWord,String passWord,String confirm,String vCode);
 
-    /**
-     * 发送邮箱验证码
-     * @param authorization 用户鉴权
-     * @return 返回验证码
-     */
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN","ROLE_SUPER_ADMIN"})
-    Result updateCode(String authorization);
-
-    /**
-     * 发送邮箱验证码
-     * @param authorization 用户鉴权
-     * @param email 新邮箱
-     * @return 返回验证码
-     */
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN","ROLE_SUPER_ADMIN"})
-    Result changeEmailCode(String authorization,String email);
     /**
      * 更改邮箱
      * @param authorization 用户jwt
@@ -115,7 +93,7 @@ public interface AccountService {
     Result updateAvatar(String authorization, String file);
 
     /**
-     *
+     * 更新用户信息
      * @param authorization jwt
      * @param nickName 昵称
      * @param iphone 手机号
@@ -184,4 +162,21 @@ public interface AccountService {
      * @return 返回是否过期
      */
     Boolean checkVipTime(Integer userId);
+
+    /**
+     * 判断是否存在该邮箱的账号
+     * @param email 邮箱
+     * @return 返回是否存在
+     */
+    Result checkEmailForAccountIsExist(String email);
+
+    /**
+     * 忘记密码状态 修改密码
+     * @param email 邮箱
+     * @param password 密码
+     * @param confirm 确认密码
+     * @param vCode 验证码
+     * @return 返回是否修改成功
+     */
+    Result changePassWordForForget(String email,String password,String confirm,String vCode);
 }
