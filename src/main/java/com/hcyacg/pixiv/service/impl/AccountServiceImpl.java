@@ -782,23 +782,6 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    @Override
-    public Result checkEmailForAccountIsExist(String email) {
-        try{
-            if (StringUtils.isBlank(email)){
-                return httpUtils.setBuild(res,new Result(400,"邮箱不能为空",false,null));
-            }
-
-            if (accountMapper.selectCount(new QueryWrapper<Account>().eq("email",email))<1){
-                return httpUtils.setBuild(res,new Result(400,"没有该账户",false,null));
-            }
-
-            return httpUtils.setBuild(res,new Result(201,"获取成功",true,null));
-        }catch (Exception e){
-            e.printStackTrace();
-            return httpUtils.setBuild(res,new Result(500,"服务器错误",false,e.getMessage()));
-        }
-    }
 
     @Override
     public Result changePassWordForForget(String email, String password, String confirm, String vCode) {
@@ -833,6 +816,7 @@ public class AccountServiceImpl implements AccountService {
             if (accountMapper.updateById(account) < 1){
                 throw new RuntimeException("修改失败");
             }
+            redisUtils.del(AppConstant.CODE_EMAIL_FORGET_CHANGE_PASSWORD_CODE + email);
             return httpUtils.setBuild(res,new Result(201,"修改成功",true,null));
         }catch (Exception e){
             e.printStackTrace();

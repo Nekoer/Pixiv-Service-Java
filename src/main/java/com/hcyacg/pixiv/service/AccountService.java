@@ -163,12 +163,7 @@ public interface AccountService {
      */
     Boolean checkVipTime(Integer userId);
 
-    /**
-     * 判断是否存在该邮箱的账号
-     * @param email 邮箱
-     * @return 返回是否存在
-     */
-    Result checkEmailForAccountIsExist(String email);
+
 
     /**
      * 忘记密码状态 修改密码

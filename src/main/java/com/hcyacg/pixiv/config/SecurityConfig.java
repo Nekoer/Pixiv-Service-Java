@@ -115,10 +115,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/accounts/code",
                 "/accounts/expires",
                 "/accounts/hasPorn",
+                "/accounts/forget/change",
                 "/systems/logs",
                 "/systems/run",
                 "/pays/**",
-                "/vips/**"
+                "/vips/**",
+                "/emails/**"
                 );
     }
 

@@ -98,8 +98,8 @@ public class AccountController {
         return accountService.isVip(authorization);
     }
 
-    @RequestMapping(value = "emails/exists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result checkEmailForAccountIsExist(@RequestParam(value = "email") String email) {
-        return accountService.checkEmailForAccountIsExist(email);
+    @RequestMapping(value = "forget/change", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result changePassWordForForget(@RequestParam(value = "email") String email,@RequestParam(value = "password") String password,@RequestParam(value = "confirm") String confirm,@RequestParam(value = "vCode") String vCode) {
+        return accountService.changePassWordForForget(email, password, confirm, vCode);
     }
 }

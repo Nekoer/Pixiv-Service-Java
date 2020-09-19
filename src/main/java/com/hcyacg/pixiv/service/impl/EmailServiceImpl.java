@@ -49,8 +49,7 @@ public class EmailServiceImpl implements EmailService {
     private AccountMapper accountMapper;
     @Autowired
     private JwtOperation jwtOperation;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+
 
 
     @Override
