@@ -301,7 +301,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void ValidateCode() {
+    public void validateCode() {
         try {
             Map<String, Object> map = validateCodeUtils.drawImage();
             java.lang.System.out.println(map.get("code"));
@@ -327,6 +327,26 @@ public class AccountServiceImpl implements AccountService {
             } catch (Exception a) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public Result validateCodeForAndroid() {
+        try {
+            Map<String, Object> map = validateCodeUtils.drawImage();
+            java.lang.System.out.println(map.get("code"));
+
+            req.getSession().setAttribute(AppConstant.CODE_EMAIL_VALIDATE, map.get("code"));
+            String session = req.getSession().getId();
+            map.remove("code");
+            map.remove("image");
+            map.put("session",session);
+
+            //redisUtils.set(AppConstant.CODE_EMAIL_VALIDATE + userName,map.get("code"),60L);
+            return httpUtils.setBuild(res, new Result(201, "获取成功", map, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return httpUtils.setBuild(res,new Result(500, "服务器内部错误", "", "错误" + e.getMessage()));
         }
     }
 

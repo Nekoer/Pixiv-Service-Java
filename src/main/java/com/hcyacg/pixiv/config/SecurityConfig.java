@@ -110,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().mvcMatchers("/illusts/**",
                 "/public/**",
                 "/accounts/validate",
+                "/accounts/android/validate",
                 "/accounts/login",
                 "/accounts/register",
                 "/accounts/code",

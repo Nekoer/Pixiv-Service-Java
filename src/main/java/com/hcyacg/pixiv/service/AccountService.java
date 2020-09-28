@@ -45,7 +45,12 @@ public interface AccountService {
     /**
      * 获取图形验证码
      */
-    void ValidateCode();
+    void validateCode();
+
+    /**
+     * 获取图形验证码 for 安卓
+     */
+    Result validateCodeForAndroid();
 
     /**
      * 修改密码

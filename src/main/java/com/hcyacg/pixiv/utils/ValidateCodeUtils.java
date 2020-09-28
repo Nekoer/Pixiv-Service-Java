@@ -72,7 +72,7 @@ public class ValidateCodeUtils {
         //将验证码值和验证码在内存中的图片封装在Map中返回
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("code", code);
-//        map.put("image", "data:image/png;base64," + encoder.encode(stream.toByteArray()).replaceAll("\r\n", ""));
+        map.put("base64", encoder.encode(stream.toByteArray()).replaceAll("\r\n", "").replaceAll("\n","").replaceAll("\\n",""));
         map.put("image", image);
         return map;
     }

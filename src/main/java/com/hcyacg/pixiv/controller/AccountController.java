@@ -44,7 +44,12 @@ public class AccountController {
 
     @RequestMapping(value = "validate", method = RequestMethod.GET)
     public void getValidate() {
-        accountService.ValidateCode();
+        accountService.validateCode();
+    }
+
+    @RequestMapping(value = "android/validate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result getValidateForAndroid() {
+        return accountService.validateCodeForAndroid();
     }
 
 
