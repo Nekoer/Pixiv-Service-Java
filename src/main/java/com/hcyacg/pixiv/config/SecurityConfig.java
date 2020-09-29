@@ -121,6 +121,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/systems/run",
                 "/pays/**",
                 "/vips/**",
+                "/geetests/**",
                 "/emails/**"
                 );
     }

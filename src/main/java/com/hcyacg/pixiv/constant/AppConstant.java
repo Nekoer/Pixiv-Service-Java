@@ -156,4 +156,6 @@ public class AppConstant {
     public static final String SYSTEM_ALLOWED_TO_REGISTER = "ALLOWED_TO_REGISTER";
     //邀请码注册
     public static final String SYSTEM_LNVITATION_CODE = "LNVITATION_CODE";
+
+
 }
