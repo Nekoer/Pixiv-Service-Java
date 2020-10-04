@@ -51,11 +51,10 @@ public class EmailServiceImpl implements EmailService {
     private JwtOperation jwtOperation;
 
 
-
     @Override
     public Result code(String email) {
         try {
-            if (!accountService.canRegister()){
+            if (!accountService.canRegister()) {
                 return httpUtils.setBuild(res, new Result(403, "本站已暂停注册", null, null));
             }
 
@@ -125,7 +124,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Result changeEmailCode(String authorization, String email) {
-        try{
+        try {
             if (StringUtils.isBlank(authorization)) {
                 return httpUtils.setBuild(res, new Result(403, "你未登录", null, null));
             }
@@ -135,19 +134,17 @@ public class EmailServiceImpl implements EmailService {
                 return httpUtils.setBuild(res, new Result(400, "该用户未找到", null, null));
             }
 
-            if (StringUtils.isBlank(email)){
+            if (StringUtils.isBlank(email)) {
                 return httpUtils.setBuild(res, new Result(400, "新邮箱不能为空", null, null));
             }
 
-            if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()){
+            if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()) {
                 return httpUtils.setBuild(res, new Result(400, "该邮箱格式错误", null, null));
             }
 
             if (redisUtils.hasKey(AppConstant.CODE_EMAIL_CHANGE_EMAIL_CODE + email)) {
                 return httpUtils.setBuild(res, new Result(400, "该邮箱已发送验证码，如需再次发送，请等待三分钟", null, null));
             }
-
-
 
 
             //获取6位验证码
@@ -161,7 +158,7 @@ public class EmailServiceImpl implements EmailService {
 
             return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
         }
@@ -169,16 +166,16 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Result changePassWordCodeForForget(String email) {
-        try{
+        try {
             if (StringUtils.isBlank(email)) {
                 return httpUtils.setBuild(res, new Result(400, "邮箱不存在", null, null));
             }
-
-            if (accountMapper.selectCount(new QueryWrapper<Account>().eq("email",email))<1){
-                return httpUtils.setBuild(res,new Result(400,"没有该账户",false,null));
+            System.out.println(accountMapper.selectList(new QueryWrapper<Account>().eq("email", email)).size());
+            if (accountMapper.selectList(new QueryWrapper<Account>().eq("email", email)).size() < 1) {
+                return httpUtils.setBuild(res, new Result(400, "没有该账户", false, null));
             }
 
-            if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()){
+            if (!AppConstant.EMAIL_PATTERN.matcher(email).matches()) {
                 return httpUtils.setBuild(res, new Result(400, "该邮箱格式错误", null, null));
             }
 
@@ -196,7 +193,7 @@ public class EmailServiceImpl implements EmailService {
             rabbitTemplate.convertAndSend("code", map);
 
             return httpUtils.setBuild(res, new Result(200, "发送成功", null, null));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return httpUtils.setBuild(res, new Result(500, "服务器内部错误", null, e.getMessage()));
         }

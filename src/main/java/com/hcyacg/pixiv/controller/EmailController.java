@@ -35,6 +35,7 @@ public class EmailController {
 
     @RequestMapping(value = "changeForgetCode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Result changePassWordCodeForForget(@RequestParam(value = "email") String email) {
+        System.out.println(email);
         return emailService.changePassWordCodeForForget(email);
     }
 }
