@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -98,6 +99,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    @Bean
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
     /**
      * 由于登录操作是创建JWT的操作
      * 这里主要设置登录操作对应的路径执行时不用走SpringSecurity的过滤链条
@@ -122,7 +129,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/pays/**",
                 "/vips/**",
                 "/geetests/**",
-                "/emails/**"
+                "/emails/code",
+                "/emails/changeForgetCode"
                 );
     }
 
