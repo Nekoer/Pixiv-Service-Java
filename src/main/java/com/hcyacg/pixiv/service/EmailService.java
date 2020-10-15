@@ -19,7 +19,7 @@ public interface EmailService {
     Result code(String email);
 
     /**
-     * 发送邮箱验证码
+     * 发送邮箱验证码 - 修改密码
      * @param authorization 用户鉴权
      * @return 返回验证码
      */
@@ -27,7 +27,7 @@ public interface EmailService {
     Result updateCode(String authorization);
 
     /**
-     * 发送邮箱验证码
+     * 发送邮箱验证码 - 修改邮箱
      * @param authorization 用户鉴权
      * @param email 新邮箱
      * @return 返回验证码

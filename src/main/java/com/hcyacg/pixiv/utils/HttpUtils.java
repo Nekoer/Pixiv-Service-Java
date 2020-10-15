@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;

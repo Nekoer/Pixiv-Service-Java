@@ -131,10 +131,11 @@ public class AccountServiceImpl implements AccountService {
 
             httpPost.setProtocolVersion(HttpVersion.HTTP_1_0);
             httpPost.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
-            httpPost.addHeader("User-Agent", "PixivAndroidApp/5.0.64 (Android 6.0)");
+            httpPost.addHeader("User-Agent", "PixivAndroidApp/5.0.145 (Android 4.4.2; R831T)");
             httpPost.addHeader("X-Client-Time", sdf.format(date));
             httpPost.addHeader("X-Client-Hash", String.valueOf(hash));
             httpPost.addHeader("Connection", "Close");
+
 
             CloseableHttpResponse response = null;
             //发送请求
