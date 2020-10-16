@@ -89,6 +89,7 @@ public class AccountServiceImpl implements AccountService {
     private TokenMapper tokenMapper;
     @Autowired
     private AccountVipMapper accountVipMapper;
+
     @Autowired
     private JwtOperation jwtOperation;
     @Value("${minio.domin}")
@@ -131,7 +132,8 @@ public class AccountServiceImpl implements AccountService {
 
             httpPost.setProtocolVersion(HttpVersion.HTTP_1_0);
             httpPost.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
-            httpPost.addHeader("User-Agent", "PixivAndroidApp/5.0.145 (Android 4.4.2; R831T)");
+            String randomData = Codeutils.getRandomStr(10);
+            httpPost.addHeader("User-Agent", randomData);
             httpPost.addHeader("X-Client-Time", sdf.format(date));
             httpPost.addHeader("X-Client-Hash", String.valueOf(hash));
             httpPost.addHeader("Connection", "Close");
