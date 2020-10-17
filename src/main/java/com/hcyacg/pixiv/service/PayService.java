@@ -32,9 +32,9 @@ public interface PayService {
     /**
      * 支付宝支付调用接口
      *
-     * @param orderNum 订单号
+     * @param vip vip
      */
-    void aliPay(String orderNum);
+    void aliPay(String authorization,int vip);
 
     String notify(HttpServletRequest request, HttpServletResponse response);
 

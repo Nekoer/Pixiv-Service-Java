@@ -104,7 +104,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             if (e instanceof ExpiredJwtException) {
                 response.getWriter().print(JSON.toJSONString(httpUtils.setBuild(response,new Result(401,"登录信息已过期",null,e.getMessage()))));
             }

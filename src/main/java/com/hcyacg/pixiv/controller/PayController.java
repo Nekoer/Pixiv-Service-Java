@@ -38,8 +38,8 @@ public class PayController {
 
 
     @RequestMapping(value = "pay", method = RequestMethod.GET)
-    public void payMent(@RequestParam String orderNum){
-        payService.aliPay(orderNum);
+    public void payMent(@RequestHeader(value = "authorization",required = false) String authorization,@RequestParam Integer vip){
+        payService.aliPay(authorization,vip);
     }
 
 
