@@ -74,6 +74,7 @@ public class IllustServiceImpl implements IllustService {
 
     @Override
     public Result detail(String illustId, String authorization, boolean reduction) {
+        System.out.println("插画ID ===>"+illustId);
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();

@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -74,6 +75,8 @@ public class PayServiceImpl implements PayService {
     private HttpServletResponse res;
     @Autowired
     private RandomUtils randomUtils;
+    @Autowired
+    private AliPayConfig aliPayConfig;
 
     @Override
     public Result createUrl(String authorization, Integer type, Integer vipId, Integer vipPackAge) {
@@ -104,7 +107,7 @@ public class PayServiceImpl implements PayService {
             }
             DecimalFormat df = new DecimalFormat("#0.00");
 
-            return new Result(201, "获取成功", codePayUtils.createUrl(type, account.getId(), BigDecimal.valueOf(Long.parseLong(df.format(money))), vipPackage.getId()), null);
+            return new Result(201, "获取成功", codePayUtils.createUrl(type, account.getId(), BigDecimal.valueOf(Double.parseDouble(df.format(money))), vipPackage.getId()), null);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(500, "获取失败", null, e.getMessage());
@@ -249,7 +252,7 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override
-    public void aliPay(String authorization,int vip) {
+    public void aliPay(String authorization,int vip,Boolean json) {
 
         try {
             if (StringUtils.isBlank(authorization)) {
@@ -273,11 +276,12 @@ public class PayServiceImpl implements PayService {
 
             res.setContentType("image/jpeg;charset=utf-8");
             //获得初始化的AlipayClient
-            AlipayClient alipayClient = new DefaultAlipayClient(AliPayConfig.gatewayUrl, AliPayConfig.app_id, AliPayConfig.merchant_private_key, "json", AliPayConfig.charset, AliPayConfig.alipay_public_key, AliPayConfig.sign_type);
+
+            AlipayClient alipayClient = new DefaultAlipayClient(aliPayConfig.gatewayUrl, aliPayConfig.app_id, aliPayConfig.merchant_private_key, "json", aliPayConfig.charset, aliPayConfig.alipay_public_key, aliPayConfig.sign_type);
             //设置请求参数
             AlipayTradePrecreateRequest aliPayRequest = new AlipayTradePrecreateRequest();
-            aliPayRequest.setReturnUrl(AliPayConfig.return_url);
-            aliPayRequest.setNotifyUrl(AliPayConfig.notify_url);
+            aliPayRequest.setReturnUrl(aliPayConfig.return_url);
+            aliPayRequest.setNotifyUrl(aliPayConfig.notify_url);
 
             DecimalFormat df = new DecimalFormat("#0.00");
             if(null == vipPackages.getDiscount()|| vipPackages.getDiscount()  <= 0){
@@ -293,22 +297,31 @@ public class PayServiceImpl implements PayService {
             Order order = new Order();
             order.setOutTrade(outTrade);
             order.setStatus(0);
-            order.setAmount(BigDecimal.valueOf(Long.parseLong(df.format(price))));
+            order.setAmount(BigDecimal.valueOf(Double.parseDouble(df.format(price))));
             order.setVip(vip);
             order.setAccount(account.getId());
             if(orderMapper.insert(order) < 1){
                 throw new RuntimeException("生成订单失败");
             }
 
-            aliPayRequest.setBizContent("{" +
-                    "    \"out_trade_no\":\"" + outTrade + "\"," + //商户订单号
-                    "    \"total_amount\":\"" + df.format(price) + "\"," +
-                    "    \"subject\":\"" + subject + "\"," +
-                    "    \"timeout_express\":\"90m\"}"); //订单允许的最晚付款时间
+            aliPayRequest.setBizContent("{\"out_trade_no\":\"" + outTrade + "\",\"total_amount\":\"" + df.format(price) + "\",\"subject\":\"" + subject + "\",\"timeout_express\":\"90m\"}"); //订单允许的最晚付款时间
             //请求
 //            String result = alipayClient.pageExecute(aliPayRequest).getBody();
             AlipayTradePrecreateResponse alipayTradePrecreateResponse = alipayClient.execute(aliPayRequest);
-            res.getOutputStream().write(aliPayUtils.createQrCode(alipayTradePrecreateResponse.getQrCode()));
+
+            if(null == json){
+                json = false;
+            }
+            if (json){
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("pay",alipayTradePrecreateResponse.getQrCode());
+                map.put("trade_no",outTrade);
+                res.setCharacterEncoding("UTF-8");
+                res.setContentType("application/json; charset=utf-8");
+                res.getOutputStream().write(JSON.toJSONString(new Result(201,"获取成功",map,null)).getBytes(StandardCharsets.UTF_8));
+            }else {
+                res.getOutputStream().write(aliPayUtils.createQrCode(alipayTradePrecreateResponse.getQrCode()));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -354,7 +367,18 @@ public class PayServiceImpl implements PayService {
                 String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
                 String seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
                 //2088612816566379
+                Order order = orderMapper.selectOne(new QueryWrapper<Order>().eq("out_trade", out_trade_no));
+                if (!order.getOutTrade().equals(out_trade_no)){
+                    return "error";
+                }
 
+                if (order.getAmount().compareTo(BigDecimal.valueOf(Double.parseDouble(total_amount))) != 0){
+                    return "error";
+                }
+
+                if(!seller_id.equals("2088612816566379")){
+                    return "error";
+                }
                 // TRADE_FINISHED(表示交易已经成功结束，并不能再对该交易做后续操作);
                 // TRADE_SUCCESS(表示交易已经成功结束，可以对该交易做后续操作，如：分润、退款等);
                 if (tradeStatus.equals("TRADE_FINISHED")) {
@@ -369,18 +393,7 @@ public class PayServiceImpl implements PayService {
                     //如果没有签约可退款协议，那么付款完成后，支付宝系统发送该交易状态通知。
 
 
-                    Order order = orderMapper.selectOne(new QueryWrapper<Order>().eq("out_trade", out_trade_no));
-                    if (!order.getOutTrade().equals(out_trade_no)){
-                        return "error";
-                    }
 
-                    if (order.getAmount().compareTo(BigDecimal.valueOf(Long.parseLong(total_amount))) != 0){
-                        return "error";
-                    }
-
-                    if(!seller_id.equals("2088612816566379")){
-                        return "error";
-                    }
 
                     VipPackage vipPackage = vipPackageMapper.selectById(order.getVip());
                     Calendar now = Calendar.getInstance();
@@ -436,6 +449,49 @@ public class PayServiceImpl implements PayService {
                     //注意：
                     //如果签约的是可退款协议，那么付款完成后，支付宝系统发送该交易状态通知。
 
+                    VipPackage vipPackage = vipPackageMapper.selectById(order.getVip());
+                    Calendar now = Calendar.getInstance();
+
+                    Integer everyMonth = 31;
+                    everyMonth *= vipPackage.getMonth();
+
+                    Account account = accountMapper.selectById(order.getAccount());
+
+                    if(accountVipMapper.selectCount(new QueryWrapper<AccountVip>().eq("account_id",account.getId())) < 1){
+                        AccountVip accountVip = new AccountVip();
+                        accountVip.setPayNo(out_trade_no);
+                        accountVip.setAccountId(account.getId());
+                        accountVip.setVipPackAgeId(vipPackage.getId());
+                        accountVip.setCreateTime(now.getTime());
+                        now.add(Calendar.DATE, everyMonth);
+                        accountVip.setEndTime(now.getTime());
+                        if(accountVipMapper.insert(accountVip) < 1){
+                            throw new RuntimeException("更新vip状态失败");
+                        }
+                        Role role = roleMapper.selectOne(new QueryWrapper<Role>().eq("role", "ROLE_VIP"));
+                        if(accountRoleMapper.selectCount(new QueryWrapper<AccountRole>().eq("account_id",account.getId()).eq("role_id",role.getId())) < 1){
+                            AccountRole accountRole = new AccountRole();
+                            accountRole.setRoleId(role.getId());
+                            accountRole.setAccountId(accountVip.getAccountId());
+                            if (accountRoleMapper.insert(accountRole) < 1) {
+                                throw new RuntimeException("fail");
+                            }
+                        }
+                    }else {
+                        AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id", account.getId()));
+                        now.add(Calendar.DATE, accountVip.getEndTime().getDay());
+                        now.add(Calendar.DATE, everyMonth);
+                        accountVip.setEndTime(now.getTime());
+                        if (accountVipMapper.updateById(accountVip) < 1) {
+                            throw new RuntimeException("更新vip状态失败");
+                        }
+                    }
+
+                    order.setTrade(trade_no);
+                    order.setStatus(1);
+                    if (orderMapper.updateById(order) < 1){
+                        throw new RuntimeException("更新订单失败");
+                    }
 
                 }
 
@@ -466,12 +522,11 @@ public class PayServiceImpl implements PayService {
         }
 
         try {
-            boolean verifyResult = AlipaySignature.rsaCheckV1(params,
-                    AliPayConfig.merchant_private_key,
-                    AliPayConfig.charset,
-                    AliPayConfig.sign_type);
 
-            return verifyResult;
+            return AlipaySignature.rsaCheckV1(params,
+                    aliPayConfig.merchant_private_key,
+                    aliPayConfig.charset,
+                    aliPayConfig.sign_type);
         } catch (AlipayApiException e) {
 
             return true;

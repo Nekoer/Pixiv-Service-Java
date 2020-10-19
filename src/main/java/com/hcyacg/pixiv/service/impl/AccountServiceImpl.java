@@ -763,10 +763,8 @@ public class AccountServiceImpl implements AccountService {
             }
 
             Boolean isOverdue = checkVipTime(accountInfo.getId());
-            if (null == isOverdue){
-                return  httpUtils.setBuild(res, new Result(500, "获取失败", null, null));
-            }else if (!isOverdue){
-                return  httpUtils.setBuild(res, new Result(400, "获取成功", "您还未成为会员", null));
+            if (!isOverdue){
+                return  httpUtils.setBuild(res, new Result(400, "您还未成为会员", null, null));
             }else {
                 AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id",accountInfo.getId()));
                 return  httpUtils.setBuild(res, new Result(201, "获取成功", accountVip, null));
@@ -782,12 +780,12 @@ public class AccountServiceImpl implements AccountService {
         try{
             //判断是否为空
             if (StringUtils.isBlank(String.valueOf(userId))){
-                return null;
+                return false;
             }
 
             //判断数据库是否有该用户
             if (accountMapper.selectCount(new QueryWrapper<Account>().eq("id",userId)) < 0){
-                return null;
+                return false;
             }
 
             AccountVip accountVip = accountVipMapper.selectOne(new QueryWrapper<AccountVip>().eq("account_id", userId));
@@ -801,7 +799,7 @@ public class AccountServiceImpl implements AccountService {
             }
         }catch (Exception e){
             //e.printStackTrace();
-            return null;
+            return false;
         }
     }
 

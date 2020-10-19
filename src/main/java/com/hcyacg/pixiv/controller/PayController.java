@@ -38,16 +38,15 @@ public class PayController {
 
 
     @RequestMapping(value = "pay", method = RequestMethod.GET)
-    public void payMent(@RequestHeader(value = "authorization",required = false) String authorization,@RequestParam Integer vip){
-        payService.aliPay(authorization,vip);
+    public void payMent(@RequestHeader(value = "authorization",required = false) String authorization,@RequestParam Integer vip,@RequestParam Boolean json){
+        payService.aliPay(authorization,vip,json);
     }
 
 
     @RequestMapping(value = "notify", method = RequestMethod.POST)
-    public String notify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
+    public void notify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
         String str = payService.notify(request, response);
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().println(str);
-        return str;
     }
 }

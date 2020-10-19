@@ -1,6 +1,7 @@
 package com.hcyacg.pixiv.service;
 
 import com.hcyacg.pixiv.dto.Result;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +35,7 @@ public interface PayService {
      *
      * @param vip vip
      */
-    void aliPay(String authorization,int vip);
+    void aliPay(String authorization, int vip, Boolean json);
 
     String notify(HttpServletRequest request, HttpServletResponse response);
 
