@@ -52,8 +52,24 @@ public class PublicController {
         return publicService.tags();
     }
 
+
     @RequestMapping(value = "setu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Result amazingPic(@RequestHeader(value = "token") String token){
         return publicService.amazingPic(token);
+    }
+
+    @RequestMapping(value = "search/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String searchUser(@RequestParam(value = "word") String word){
+        return publicService.searchUser(word);
+    }
+
+    @RequestMapping(value = "search/users/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String userDetails(@RequestParam(value = "id") String id){
+        return publicService.userDetails(id);
+    }
+
+    @RequestMapping(value = "search/users/illusts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String userIllusts(@RequestParam(value = "id") String id){
+        return publicService.userIllusts(id);
     }
 }

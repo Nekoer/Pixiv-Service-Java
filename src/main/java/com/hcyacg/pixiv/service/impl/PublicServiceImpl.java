@@ -20,6 +20,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import java.util.*;
  * @Date: 2020/5/13 20:21
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PublicServiceImpl implements PublicService {
     @Autowired
     private HttpUtils httpUtils;
@@ -231,8 +233,7 @@ public class PublicServiceImpl implements PublicService {
         try {
 
             if (redisUtils.hasKey(AppConstant.TAGS_REDIS + AppConstant.SDF.format(new Date()))) {
-                infoStream = (ByteArrayOutputStream) redisUtils.get("tags::" + AppConstant.SDF.format(new Date()));
-            } else {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.TAGS_REDIS + AppConstant.SDF.format(new Date()));            } else {
                 url = new StringBuilder("https://app-api.pixiv.net/v1/trending-tags/illust");
                 url.append("?filter=").append("for_ios");
                 url.append("&date=").append(AppConstant.SDF.format(new Date()));
@@ -251,7 +252,6 @@ public class PublicServiceImpl implements PublicService {
                     token1 = redisUtils.get("token");
                 }
                 PixivToken token = (PixivToken) token1;
-                System.out.println(token);
                 httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
 
 
@@ -371,6 +371,191 @@ public class PublicServiceImpl implements PublicService {
         } catch (Exception e) {
             e.printStackTrace();
             return httpUtils.setBuild(res,new Result(500, "获取失败", null, "服务器内部错误"));
+        }
+    }
+
+    @Override
+    public String searchUser(String word) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet();
+        ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        StringBuilder url = null;
+        Integer code = null;
+        try {
+
+            if (redisUtils.hasKey(AppConstant.SEARCH_USER_REDIS + word)) {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_REDIS + word);
+            } else {
+                url = new StringBuilder("https://app-api.pixiv.net/v1/search/user");
+                url.append("?word=").append(word);
+                url.append("&filter=").append("for_ios");
+                url.append("&sort=").append("date_desc");
+
+                httpGet = httpUtils.get(String.valueOf(url));
+                //httpGet.addHeader("host", "http://app-api.pixiv.net/");
+                httpGet.addHeader("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)");
+                httpGet.addHeader("App-OS", "ios");
+                httpGet.addHeader("App-OS-Version", "12.2");
+                httpGet.addHeader("App-Version", "7.6.2");
+                httpGet.addHeader("Accept-Language", "zh-cn");
+
+                Object token1 = redisUtils.get("token");
+                if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
+                    accountService.getToken();
+                    token1 = redisUtils.get("token");
+                }
+                PixivToken token = (PixivToken) token1;
+                httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
+
+
+                //发送请求
+                CloseableHttpResponse response = httpClient.execute(httpGet);
+                code = response.getStatusLine().getStatusCode();
+                InputStream in = response.getEntity().getContent();
+                byte[] buffer = new byte[1];
+                int len = 0;
+                String data = "";
+                while ((len = in.read(buffer)) > 0) {
+                    infoStream.write(buffer, 0, len);
+                }
+                if (code == 200) {
+                    redisUtils.set(AppConstant.SEARCH_USER_REDIS + word, infoStream, 24 * 60 * 60L);
+                }
+            }
+            infoStream.close();
+            httpClient.close();
+            res.setStatus(201);
+            return infoStream.toString("UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.setStatus(500);
+            return JSON.toJSONString(new Result(500, "请求失败", null, e.getMessage()));
+        } finally {
+            assert httpGet != null;
+            httpGet.abort();
+        }
+    }
+
+    @Override
+    public String userDetails(String userId) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet();
+        ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        StringBuilder url = null;
+        Integer code = null;
+        try {
+
+            if (redisUtils.hasKey(AppConstant.SEARCH_USER_ID_DETAILS_REDIS + userId)) {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_ID_DETAILS_REDIS + userId);
+            } else {
+                url = new StringBuilder("https://app-api.pixiv.net/v1/user/detail");
+                url.append("?user_id=").append(userId);
+                url.append("&filter=").append("for_ios");
+
+                httpGet = httpUtils.get(String.valueOf(url));
+                //httpGet.addHeader("host", "http://app-api.pixiv.net/");
+                httpGet.addHeader("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)");
+                httpGet.addHeader("App-OS", "ios");
+                httpGet.addHeader("App-OS-Version", "12.2");
+                httpGet.addHeader("App-Version", "7.6.2");
+                httpGet.addHeader("Accept-Language", "zh-cn");
+
+                Object token1 = redisUtils.get("token");
+                if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
+                    accountService.getToken();
+                    token1 = redisUtils.get("token");
+                }
+                PixivToken token = (PixivToken) token1;
+                httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
+
+
+                //发送请求
+                CloseableHttpResponse response = httpClient.execute(httpGet);
+                code = response.getStatusLine().getStatusCode();
+                InputStream in = response.getEntity().getContent();
+                byte[] buffer = new byte[1];
+                int len = 0;
+                String data = "";
+                while ((len = in.read(buffer)) > 0) {
+                    infoStream.write(buffer, 0, len);
+                }
+                if (code == 200) {
+                    redisUtils.set(AppConstant.SEARCH_USER_ID_DETAILS_REDIS + userId, infoStream, 24 * 60 * 60L);
+                }
+            }
+            infoStream.close();
+            httpClient.close();
+            res.setStatus(201);
+            return infoStream.toString("UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.setStatus(500);
+            return JSON.toJSONString(new Result(500, "请求失败", null, e.getMessage()));
+        } finally {
+            assert httpGet != null;
+            httpGet.abort();
+        }
+    }
+
+    @Override
+    public String userIllusts(String userId) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet();
+        ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        StringBuilder url = null;
+        Integer code = null;
+        try {
+
+            if (redisUtils.hasKey(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId)) {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId);
+            } else {
+                url = new StringBuilder("https://app-api.pixiv.net/v1/user/illusts");
+                url.append("?user_id=").append(userId);
+                url.append("&filter=").append("for_ios");
+                url.append("&type=").append("illust");
+
+                httpGet = httpUtils.get(String.valueOf(url));
+                //httpGet.addHeader("host", "http://app-api.pixiv.net/");
+                httpGet.addHeader("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)");
+                httpGet.addHeader("App-OS", "ios");
+                httpGet.addHeader("App-OS-Version", "12.2");
+                httpGet.addHeader("App-Version", "7.6.2");
+                httpGet.addHeader("Accept-Language", "zh-cn");
+
+                Object token1 = redisUtils.get("token");
+                if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
+                    accountService.getToken();
+                    token1 = redisUtils.get("token");
+                }
+                PixivToken token = (PixivToken) token1;
+                httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
+
+
+                //发送请求
+                CloseableHttpResponse response = httpClient.execute(httpGet);
+                code = response.getStatusLine().getStatusCode();
+                InputStream in = response.getEntity().getContent();
+                byte[] buffer = new byte[1];
+                int len = 0;
+                String data = "";
+                while ((len = in.read(buffer)) > 0) {
+                    infoStream.write(buffer, 0, len);
+                }
+                if (code == 200) {
+                    redisUtils.set(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId, infoStream, 24 * 60 * 60L);
+                }
+            }
+            infoStream.close();
+            httpClient.close();
+            res.setStatus(201);
+            return infoStream.toString("UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.setStatus(500);
+            return JSON.toJSONString(new Result(500, "请求失败", null, e.getMessage()));
+        } finally {
+            assert httpGet != null;
+            httpGet.abort();
         }
     }
 }

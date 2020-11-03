@@ -57,9 +57,28 @@ public class AppConstant {
     public static final String SEARCH_REDIS = "search::";
 
     /**
+     * 搜索作者
+     */
+    public static final String SEARCH_USER_REDIS = "search:user:";
+
+    /**
+     * 作者id寻信息
+     */
+    public static final String SEARCH_USER_ID_DETAILS_REDIS = "search:user:id::details:";
+
+    /**
+     * 作者id寻作品
+     */
+    public static final String SEARCH_USER_ID_ILLUSTS_REDIS = "search:user:id:illusts:";
+
+
+
+    /**
      * 详情 redisKey
      */
     public static final String DETAIL_REDIS = "detail::";
+
+
 
     /**
      * 图片访问 redisKey
@@ -156,6 +175,7 @@ public class AppConstant {
     public static final String SYSTEM_ALLOWED_TO_REGISTER = "ALLOWED_TO_REGISTER";
     //邀请码注册
     public static final String SYSTEM_LNVITATION_CODE = "LNVITATION_CODE";
+
 
 
 }

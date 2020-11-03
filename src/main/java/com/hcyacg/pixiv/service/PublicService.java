@@ -50,4 +50,25 @@ public interface PublicService {
      * @return 返回数据
      */
     Result amazingPic(String token);
+
+    /**
+     * 搜索作者
+     * @param word 作者名
+     * @return 返回作者信息
+     */
+    String searchUser(String word);
+
+    /**
+     * 根据ID查找作者
+     * @param userId 作者id
+     * @return 返回作者信息
+     */
+    String userDetails(String userId);
+
+    /**
+     * 根据 ID查找作者的作品
+     * @param userId 作者id
+     * @return 返回作者信息
+     */
+    String userIllusts(String userId);
 }
