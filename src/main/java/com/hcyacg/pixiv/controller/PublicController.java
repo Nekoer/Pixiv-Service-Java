@@ -59,8 +59,8 @@ public class PublicController {
     }
 
     @RequestMapping(value = "search/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String searchUser(@RequestParam(value = "word") String word){
-        return publicService.searchUser(word);
+    public String searchUser(@RequestParam(value = "word") String word,@RequestParam(value = "offset") Integer offset){
+        return publicService.searchUser(word,offset);
     }
 
     @RequestMapping(value = "search/users/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +69,7 @@ public class PublicController {
     }
 
     @RequestMapping(value = "search/users/illusts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String userIllusts(@RequestParam(value = "id") String id){
-        return publicService.userIllusts(id);
+    public String userIllusts(@RequestParam(value = "id") String id,@RequestParam(value = "offset") Integer offset){
+        return publicService.userIllusts(id,offset);
     }
 }

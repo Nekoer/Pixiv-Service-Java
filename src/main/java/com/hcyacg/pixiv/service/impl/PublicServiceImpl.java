@@ -375,7 +375,7 @@ public class PublicServiceImpl implements PublicService {
     }
 
     @Override
-    public String searchUser(String word) {
+    public String searchUser(String word,Integer offset) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
@@ -383,13 +383,14 @@ public class PublicServiceImpl implements PublicService {
         Integer code = null;
         try {
 
-            if (redisUtils.hasKey(AppConstant.SEARCH_USER_REDIS + word)) {
-                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_REDIS + word);
+            if (redisUtils.hasKey(AppConstant.SEARCH_USER_REDIS + word + String.valueOf(offset))) {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_REDIS + word + String.valueOf(offset));
             } else {
                 url = new StringBuilder("https://app-api.pixiv.net/v1/search/user");
                 url.append("?word=").append(word);
                 url.append("&filter=").append("for_ios");
                 url.append("&sort=").append("date_desc");
+                url.append("&offset=").append(null == offset ?  30 : offset );
 
                 httpGet = httpUtils.get(String.valueOf(url));
                 //httpGet.addHeader("host", "http://app-api.pixiv.net/");
@@ -419,7 +420,7 @@ public class PublicServiceImpl implements PublicService {
                     infoStream.write(buffer, 0, len);
                 }
                 if (code == 200) {
-                    redisUtils.set(AppConstant.SEARCH_USER_REDIS + word, infoStream, 24 * 60 * 60L);
+                    redisUtils.set(AppConstant.SEARCH_USER_REDIS + word + String.valueOf(offset), infoStream, 24 * 60 * 60L);
                 }
             }
             infoStream.close();
@@ -498,7 +499,7 @@ public class PublicServiceImpl implements PublicService {
     }
 
     @Override
-    public String userIllusts(String userId) {
+    public String userIllusts(String userId,Integer offset) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
@@ -506,13 +507,14 @@ public class PublicServiceImpl implements PublicService {
         Integer code = null;
         try {
 
-            if (redisUtils.hasKey(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId)) {
-                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId);
+            if (redisUtils.hasKey(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId + String.valueOf(offset))) {
+                infoStream = (ByteArrayOutputStream) redisUtils.get(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId + String.valueOf(offset));
             } else {
                 url = new StringBuilder("https://app-api.pixiv.net/v1/user/illusts");
                 url.append("?user_id=").append(userId);
                 url.append("&filter=").append("for_ios");
                 url.append("&type=").append("illust");
+                url.append("&offset=").append(null == offset ?  30 : offset );
 
                 httpGet = httpUtils.get(String.valueOf(url));
                 //httpGet.addHeader("host", "http://app-api.pixiv.net/");
@@ -542,7 +544,7 @@ public class PublicServiceImpl implements PublicService {
                     infoStream.write(buffer, 0, len);
                 }
                 if (code == 200) {
-                    redisUtils.set(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId, infoStream, 24 * 60 * 60L);
+                    redisUtils.set(AppConstant.SEARCH_USER_ID_ILLUSTS_REDIS + userId + String.valueOf(offset), infoStream, 24 * 60 * 60L);
                 }
             }
             infoStream.close();

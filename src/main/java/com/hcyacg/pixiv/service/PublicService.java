@@ -56,7 +56,7 @@ public interface PublicService {
      * @param word 作者名
      * @return 返回作者信息
      */
-    String searchUser(String word);
+    String searchUser(String word,Integer offset);
 
     /**
      * 根据ID查找作者
@@ -64,11 +64,10 @@ public interface PublicService {
      * @return 返回作者信息
      */
     String userDetails(String userId);
-
     /**
      * 根据 ID查找作者的作品
      * @param userId 作者id
      * @return 返回作者信息
      */
-    String userIllusts(String userId);
+    String userIllusts(String userId,Integer offset);
 }
