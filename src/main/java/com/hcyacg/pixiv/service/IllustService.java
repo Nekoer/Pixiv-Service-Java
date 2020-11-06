@@ -27,7 +27,7 @@ public interface IllustService {
      * @param illustId 插画id
      * @return 返回插画详细评论
      */
-    String comments(String illustId);
+    String comments(String illustId,Integer offset,Boolean includeTotalComments);
 
 
     /**

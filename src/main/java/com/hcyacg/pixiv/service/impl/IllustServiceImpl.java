@@ -523,7 +523,7 @@ public class IllustServiceImpl implements IllustService {
     }
 
     @Override
-    public String comments(String illustId) {
+    public String comments(String illustId,Integer offset,Boolean includeTotalComments) {
         if (StringUtils.isBlank(illustId)) {
             return JSONObject.toJSONString(new Result(400, "请求失败", "", "插画id不能为空"));
         }
@@ -531,7 +531,16 @@ public class IllustServiceImpl implements IllustService {
         HttpGet httpGet = null;
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
         try {
-            httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/comments?illust_id=" + illustId);
+            if(null == offset){
+                httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/comments?illust_id=" + illustId + "&offset=30&include_total_comments=false");
+
+            }else {
+                if (!AppConstant.ISNUMBER.matches(String.valueOf(offset)) || offset <= 0){
+                    offset = 30;
+                }
+                httpGet = httpUtils.get(AppConstant.APP_API_URL + "/v1/illust/comments?illust_id=" + illustId +"&offset="+ offset + "&include_total_comments="+includeTotalComments);
+            }
+
             httpGet.addHeader("App-OS", "ios");
             httpGet.addHeader("App-OS-Version", "12.2");
             httpGet.addHeader("App-Version", "7.6.2");
@@ -543,7 +552,6 @@ public class IllustServiceImpl implements IllustService {
                 token1 = redisUtils.get("token");
             }
             PixivToken token = (PixivToken) token1;
-            System.out.println(token);
             httpGet.addHeader("Authorization", "Bearer " + token.getAccessToken());
 
 
