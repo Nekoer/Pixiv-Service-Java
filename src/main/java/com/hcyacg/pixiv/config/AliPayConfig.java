@@ -36,10 +36,10 @@ public class AliPayConfig {
     @Value("${alipay.publickey}")
     public  String alipay_public_key;
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public  String notify_url = "https://api.acg-gov.com/pays/notify";
+    public  String notify_url = "https://api.acgmx.com/pays/notify";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public  String return_url = "https://www.acg-gov.com";
+    public  String return_url = "https://www.acgmx.com";
 
     // 签名方式 RSA2
     @Value("${alipay.signType}")

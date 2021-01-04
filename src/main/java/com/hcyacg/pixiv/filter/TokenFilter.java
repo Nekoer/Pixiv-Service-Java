@@ -102,7 +102,7 @@ public class TokenFilter implements Filter {
             filterChain.doFilter(req, res);
             return;
         } else if (null != req.getHeader("referer")) {
-            if (req.getHeader("referer").contains("https://www.acg-gov.com") || req.getHeader("referer").contains("https://m.acg-gov.com") || req.getHeader("referer").contains("https://api.hcyacg.com")) {
+            if (req.getHeader("referer").contains("https://www.acgmx.com") || req.getHeader("referer").contains("https://m.acgmx.com") || req.getHeader("referer").contains("https://api.hcyacg.com")) {
                 filterChain.doFilter(req, res);
                 return;
             }
