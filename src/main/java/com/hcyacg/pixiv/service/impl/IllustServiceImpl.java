@@ -102,7 +102,7 @@ public class IllustServiceImpl implements IllustService {
 
                 Object token1 = redisUtils.get("token");
                 if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
-                    accountService.getToken();
+                    accountService.refreshToken();
                     token1 = redisUtils.get("token");
                 }
                 PixivToken token = (PixivToken) token1;
@@ -248,7 +248,7 @@ public class IllustServiceImpl implements IllustService {
 
                 Object token1 = redisUtils.get("token");
                 if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
-                    accountService.getToken();
+                    accountService.refreshToken();
                     token1 = redisUtils.get("token");
                 }
                 PixivToken token = (PixivToken) token1;
@@ -548,7 +548,7 @@ public class IllustServiceImpl implements IllustService {
 
             Object token1 = redisUtils.get("token");
             if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
-                accountService.getToken();
+                accountService.refreshToken();
                 token1 = redisUtils.get("token");
             }
             PixivToken token = (PixivToken) token1;
@@ -672,7 +672,7 @@ public class IllustServiceImpl implements IllustService {
 
             Object token1 = redisUtils.get("token");
             if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
-                accountService.getToken();
+                accountService.refreshToken();
                 token1 = redisUtils.get("token");
             }
             PixivToken token = (PixivToken) token1;

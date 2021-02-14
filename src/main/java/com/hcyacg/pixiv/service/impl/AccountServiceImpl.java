@@ -110,33 +110,118 @@ public class AccountServiceImpl implements AccountService {
         try {
 
 
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+00:00");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] digest = md5.digest((sdf.format(date) + hashSecret).getBytes());
-            StringBuilder hash = new StringBuilder();
-            for (int r3 = 0; r3 < digest.length; r3++) {
-                hash.append(String.format("%02x", digest[r3]));
+//            Date date = new Date();
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+00:00");
+//            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//            MessageDigest md5 = MessageDigest.getInstance("MD5");
+//            byte[] digest = md5.digest((sdf.format(date) + hashSecret).getBytes());
+//            StringBuilder hash = new StringBuilder();
+//            for (int r3 = 0; r3 < digest.length; r3++) {
+//                hash.append(String.format("%02x", digest[r3]));
+//            }
+//
+//            CloseableHttpClient httpClient = HttpClients.createDefault();
+//            List<NameValuePair> parameters = new ArrayList<NameValuePair>(0);
+//            parameters.add(new BasicNameValuePair("get_secure_url", "1"));
+//            parameters.add(new BasicNameValuePair("client_id", clientId));
+//            parameters.add(new BasicNameValuePair("client_secret", clientSecret));
+//            parameters.add(new BasicNameValuePair("grant_type", "password"));
+//            parameters.add(new BasicNameValuePair("username", userName));
+//            parameters.add(new BasicNameValuePair("password", passWord));
+//            httpPost = httpUtils.post(AppConstant.OAUTH_URL + "/auth/token", parameters);
+//
+//            httpPost.setProtocolVersion(HttpVersion.HTTP_1_0);
+//            httpPost.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
+//            String randomData = Codeutils.getRandomStr(10);
+//            httpPost.addHeader("User-Agent", randomData);
+//            httpPost.addHeader("X-Client-Time", sdf.format(date));
+//            httpPost.addHeader("X-Client-Hash", String.valueOf(hash));
+//            httpPost.addHeader("Connection", "Close");
+//
+//
+//            CloseableHttpResponse response = null;
+//            //发送请求
+//            response = httpClient.execute(httpPost);
+//            InputStream in = response.getEntity().getContent();
+//            byte[] buffer = new byte[1];
+//            int len = 0;
+//            String data = "";
+//            while ((len = in.read(buffer)) > 0) {
+//                infoStream.write(buffer, 0, len);
+//            }
+
+            //System.out.println(infoStream.toString("UTF-8"));
+
+            //JSONObject parse = JSONObject.parseObject(infoStream.toString("UTF-8"));
+            //JSONObject obj = JSONObject.parseObject(String.valueOf(parse.get("response")));
+
+            PixivToken token = new PixivToken();
+            //token.setAccessToken(String.valueOf(obj.get("access_token")));
+            token.setAccessToken("DkxGWcGq36lP3XpJCzKVggZ0KqMESAVGSSZAQPPYOb0");
+
+            //token.setDeviceToken(String.valueOf(obj.get("device_token")));
+            //token.setExpiresIn(String.valueOf(obj.get("expires_in")));
+            token.setExpiresIn("3600");
+
+            //token.setRefreshToken(String.valueOf(obj.get("refresh_token")));
+            token.setRefreshToken("gtHmF_iv9bGMYz1xl5GG8iQ44PS_kcWa64h-a-iDmCw");
+
+            //token.setTokenType(String.valueOf(obj.get("token_type")));
+
+            redisUtils.set("topToken", token);
+            //redisUtils.set("token", token, Long.parseLong(String.valueOf(obj.get("expires_in"))));
+//            redisUtils.expire("token",Long.parseLong(String.valueOf(obj.get("expires_in"))));
+
+//            if (tokenMapper.selectById(1) == null){
+//                if (tokenMapper.insert(token) < 1) {
+//                    throw new RuntimeException("插入数据库失败");
+//                }
+//            }else {
+//                token.setId(1);
+//                tokenMapper.updateById(token);
+//            }
+            refreshToken();
+            infoStream.close();
+            return new Result(201, "请求成功", JSONObject.parse(infoStream.toString("UTF-8")), "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(500, "请求失败", "", e.getMessage());
+        } finally {
+            assert httpPost != null;
+            httpPost.abort();
+        }
+
+    }
+
+    @Override
+    public Result refreshToken() {
+        HttpPost httpPost = null;
+        ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        try{
+            Object token1 = redisUtils.get("topToken");
+            if (StringUtils.isBlank(String.valueOf(token1)) || token1 == null) {
+                getToken();
+                token1 = redisUtils.get("topToken");
             }
+            PixivToken token = (PixivToken) token1;
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
             List<NameValuePair> parameters = new ArrayList<NameValuePair>(0);
-            parameters.add(new BasicNameValuePair("get_secure_url", "1"));
+            parameters.add(new BasicNameValuePair("include_policy", "true"));
             parameters.add(new BasicNameValuePair("client_id", clientId));
             parameters.add(new BasicNameValuePair("client_secret", clientSecret));
-            parameters.add(new BasicNameValuePair("grant_type", "password"));
-            parameters.add(new BasicNameValuePair("username", userName));
-            parameters.add(new BasicNameValuePair("password", passWord));
+            parameters.add(new BasicNameValuePair("grant_type", "refresh_token"));
+            parameters.add(new BasicNameValuePair("refresh_token", token.getRefreshToken()));
+
             httpPost = httpUtils.post(AppConstant.OAUTH_URL + "/auth/token", parameters);
 
             httpPost.setProtocolVersion(HttpVersion.HTTP_1_0);
             httpPost.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
             String randomData = Codeutils.getRandomStr(10);
             httpPost.addHeader("User-Agent", randomData);
-            httpPost.addHeader("X-Client-Time", sdf.format(date));
-            httpPost.addHeader("X-Client-Hash", String.valueOf(hash));
-            httpPost.addHeader("Connection", "Close");
+//            httpPost.addHeader("X-Client-Time", sdf.format(date));
+//            httpPost.addHeader("X-Client-Hash", String.valueOf(hash));
+//            httpPost.addHeader("Connection", "Close");
 
 
             CloseableHttpResponse response = null;
@@ -150,40 +235,17 @@ public class AccountServiceImpl implements AccountService {
                 infoStream.write(buffer, 0, len);
             }
             JSONObject parse = JSONObject.parseObject(infoStream.toString("UTF-8"));
-            JSONObject obj = JSONObject.parseObject(String.valueOf(parse.get("response")));
 
+            token.setAccessToken(parse.getString("access_token"));
+            redisUtils.set("token",token,Long.parseLong(String.valueOf(parse.get("expires_in"))));
 
-            PixivToken token = new PixivToken();
-            token.setAccessToken(String.valueOf(obj.get("access_token")));
-            token.setDeviceToken(String.valueOf(obj.get("device_token")));
-            token.setExpiresIn(String.valueOf(obj.get("expires_in")));
-            token.setRefreshToken(String.valueOf(obj.get("refresh_token")));
-            token.setTokenType(String.valueOf(obj.get("token_type")));
-
-            redisUtils.set("token", token, Long.parseLong(String.valueOf(obj.get("expires_in"))));
-//            redisUtils.expire("token",Long.parseLong(String.valueOf(obj.get("expires_in"))));
-
-//            if (tokenMapper.selectById(1) == null){
-//                if (tokenMapper.insert(token) < 1) {
-//                    throw new RuntimeException("插入数据库失败");
-//                }
-//            }else {
-//                token.setId(1);
-//                tokenMapper.updateById(token);
-//            }
-
-            infoStream.close();
-            return new Result(201, "请求成功", JSONObject.parse(infoStream.toString("UTF-8")), "");
-        } catch (Exception e) {
+            return new Result(201, "请求成功", infoStream.toString("UTF-8"), "");
+        }catch (Exception e){
             e.printStackTrace();
             return new Result(500, "请求失败", "", e.getMessage());
-        } finally {
-            assert httpPost != null;
-            httpPost.abort();
-
         }
-
     }
+
 
     @Override
     public Result register(String userName, String passWord, String confirm, String email, String code) {

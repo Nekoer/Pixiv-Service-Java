@@ -22,6 +22,12 @@ public interface AccountService {
     Result getToken();
 
     /**
+     * 根据refreshToken来更新accessToken
+     * @return
+     */
+    Result refreshToken();
+
+    /**
      * 本站用户注册
      * @param userName 账户
      * @param passWord 密码
