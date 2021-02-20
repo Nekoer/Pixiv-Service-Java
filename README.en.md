@@ -28,7 +28,7 @@ The Springboot project starts Tomcat
 
 - [ ] Mobile terminal development
 
-- [ ] [APP development](https://github.com/Nekoer/acggov-App)
+- [x] [APP development](https://github.com/Nekoer/acggov-App)
 
 - [ ] IOS development (tentative)
 

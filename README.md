@@ -36,7 +36,7 @@ Springboot项目 Tomcat启动
 - [ ] 用户作品上传
 - [ ] 用户作品排行榜
 - [ ] 移动端开发(弃)
-- [ ] [APP开发](https://github.com/Nekoer/acggov-App)
+- [x] [APP开发](https://github.com/Nekoer/acggov-App)
 - [ ] IOS开发(暂定)
 
 # License
