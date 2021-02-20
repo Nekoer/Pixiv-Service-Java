@@ -7,7 +7,7 @@
 
 
 #### 介绍
-http://www.acg-gov.com/ 的服务端
+http://www.acgmx.com/ 的服务端
 
 #### 网站架构
 ![](https://s1.ax1x.com/2020/07/19/UfSPJO.png)
@@ -36,7 +36,7 @@ Springboot项目 Tomcat启动
 - [ ] 用户作品上传
 - [ ] 用户作品排行榜
 - [ ] 移动端开发(弃)
-- [ ] APP开发(开发中)
+- [ ] [APP开发](https://github.com/Nekoer/acggov-App)
 - [ ] IOS开发(暂定)
 
 # License
