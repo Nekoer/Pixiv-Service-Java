@@ -23,7 +23,7 @@ public class AliPayConfig {
     /**
      * 沙箱版
      */
-    // 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号 
+    // 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号
     @Value("${alipay.appId}")
     public  String app_id;
 
@@ -32,6 +32,7 @@ public class AliPayConfig {
     public  String merchant_private_key;
 
     // 支付宝公钥,查看地址：https://openhome.alipay.com/platform/keyManage.htm 对应APPID下的支付宝公钥。
+    // 
     @Value("${alipay.publickey}")
     public  String alipay_public_key;
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
