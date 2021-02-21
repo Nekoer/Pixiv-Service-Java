@@ -27,11 +27,11 @@ import java.util.Date;
 @Component
 public class COSUtils {
 
-    private static final String ACCESSKEY = "AKIDa0CAtN5eR0KQHstYfXCcnjQr54pLieQ7";
-    private static final String SECRETKEY = "bx3uVt2xd4HFzUkjSv85mDNHvKTN1PXS";
-    private static final String BUCKETNAME = "pixiv-1251326201";
-    private static final String APPID = "1251326201 ";
-    private static final String REGIONID = "ap-nanjing";
+    private static final String ACCESSKEY = "";
+    private static final String SECRETKEY = "";
+    private static final String BUCKETNAME = "";
+    private static final String APPID = "";
+    private static final String REGIONID = "";
 
 
     public COSClient getClient(){
