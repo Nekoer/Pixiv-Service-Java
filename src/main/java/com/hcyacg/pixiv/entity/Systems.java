@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Date: 2020/7/10 11:14
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@TableName(value = "system")
+@TableName(value = "systems")
 public class Systems implements Serializable {
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
