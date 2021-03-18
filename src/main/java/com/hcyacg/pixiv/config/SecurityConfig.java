@@ -130,7 +130,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/vips/**",
                 "/geetests/**",
                 "/emails/code",
-                "/emails/changeForgetCode"
+                "/emails/changeForgetCode",
+
+                "/v2/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/images/**",
+                "/configuration/**",
+                "/swagger-resources"
                 );
     }
 
