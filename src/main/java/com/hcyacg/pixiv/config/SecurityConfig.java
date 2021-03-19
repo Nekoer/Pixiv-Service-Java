@@ -114,31 +114,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         //登录请求完全不走SpringSecurity，由自定义Controller完成
         //其它不想走过滤链的请求也可以在这里配置
-        web.ignoring().mvcMatchers("/illusts/**",
-                "/public/**",
-                "/accounts/validate",
-                "/accounts/android/validate",
-                "/accounts/login",
-                "/accounts/register",
-                "/accounts/code",
-                "/accounts/expires",
-                "/accounts/hasPorn",
-                "/accounts/forget/change",
-                "/systems/logs",
-                "/systems/run",
-                "/pays/**",
-                "/vips/**",
-                "/geetests/**",
-                "/emails/code",
-                "/emails/changeForgetCode",
-
-                "/v2/**",
+        web.ignoring()
+                .mvcMatchers(
+                        "/illusts/**",
+                        "/public/**",
+                        "/accounts/validate",
+                        "/accounts/android/validate",
+                        "/accounts/login",
+                        "/accounts/register",
+                        "/accounts/code",
+                        "/accounts/expires",
+                        "/accounts/hasPorn",
+                        "/accounts/forget/change",
+                        "/systems/logs",
+                        "/systems/run",
+                        "/pays/**",
+                        "/vips/**",
+                        "/geetests/**",
+                        "/emails/code",
+                        "/emails/changeForgetCode"
+                ).antMatchers("/doc.html",
                 "/swagger-ui.html",
                 "/webjars/**",
-                "/images/**",
-                "/configuration/**",
-                "/swagger-resources"
-                );
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/favicon.ico",
+                "/v2/**");
     }
 
     /**

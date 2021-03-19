@@ -7,10 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 
 @EnableRabbit
 @SpringBootApplication
+@EnableSwagger2WebMvc
 @MapperScan("com.hcyacg.pixiv.mapper")
 public class PixivApplication extends SpringBootServletInitializer {
     @Override

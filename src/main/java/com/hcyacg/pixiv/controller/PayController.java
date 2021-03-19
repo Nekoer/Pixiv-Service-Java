@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
  * @Author: Nekoer
@@ -35,9 +34,9 @@ public class PayController {
     @ApiOperation(value = "创建支付链接",notes = "创建支付链接")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "token", required = true, paramType = "header", dataType = "string"),
-            @ApiImplicitParam(name = "type", value = "支付方式", required = true, paramType = "query", dataType = "int"),
-            @ApiImplicitParam(name = "vipId", value = "会员种类", required = true, paramType = "query", dataType = "int"),
-            @ApiImplicitParam(name = "vipPackAge", value = "会员套餐", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "type", value = "支付方式", required = true, paramType = "query", dataType = "int",defaultValue = "1",example = "1"),
+            @ApiImplicitParam(name = "vipId", value = "会员种类", required = true, paramType = "query", dataType = "int",defaultValue = "1",example = "1"),
+            @ApiImplicitParam(name = "vipPackAge", value = "会员套餐", required = true, paramType = "query", dataType = "int",defaultValue = "1",example = "1"),
     })
     @RequestMapping(value = "pays", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Result createUrl(@RequestHeader(value = "authorization",required = false) String authorization,@RequestParam(value = "type") Integer type, @RequestParam(value = "vipId") Integer vipId,@RequestParam(value = "vipPackAge")Integer vipPackAge){
@@ -54,7 +53,7 @@ public class PayController {
     @ApiOperation(value = "支付宝支付调用接口",notes = "支付宝支付调用接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "token", required = true, paramType = "header", dataType = "string"),
-            @ApiImplicitParam(name = "vip", value = "会员种类", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "vip", value = "会员种类", required = true, paramType = "query", dataType = "int",defaultValue = "1",example = "1"),
             @ApiImplicitParam(name = "json", value = "是否为json格式", required = true, paramType = "query", dataType = "boolean"),
     })
     @RequestMapping(value = "pay", method = RequestMethod.GET)

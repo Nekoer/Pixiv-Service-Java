@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -81,7 +80,7 @@ public class IllustController {
     @ApiOperation(value = "查看插画的评论数据",notes = "查看插画的评论数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "illustId", value = "插画id", required = true, paramType = "query", dataType = "string"),
-            @ApiImplicitParam(name = "offset", value = "显示的数量", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "offset", value = "显示的数量", required = true, paramType = "query", dataType = "int",defaultValue = "30",example = "30"),
             @ApiImplicitParam(name = "include_total_comments", value = "总评论", required = true, paramType = "query", dataType = "boolean"),
     })
     @RequestMapping(value = "comments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +110,7 @@ public class IllustController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mode", value = "模式", required = true, paramType = "query", dataType = "string"),
             @ApiImplicitParam(name = "date", value = "日期", required = true, paramType = "query", dataType = "string"),
-            @ApiImplicitParam(name = "offset", value = "显示的数量", required = true, paramType = "query", dataType = "Integer"),
+            @ApiImplicitParam(name = "offset", value = "显示的数量", required = true, paramType = "query", dataType = "int",defaultValue = "30",example = "30"),
     })
     @RequestMapping(value = "ranking", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String ranking(@RequestParam(value = "mode",required = false) String mode,@RequestParam(value = "date",required = false) String date,@RequestParam(value = "offset",required = false)  String offset){

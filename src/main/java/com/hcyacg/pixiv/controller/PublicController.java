@@ -85,7 +85,7 @@ public class PublicController {
     @ApiOperation(value = "搜索作者",notes = "搜索作者")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "word", value = "关键词", required = true, paramType = "query", dataType = "string"),
-            @ApiImplicitParam(name = "offset", value = "当页数量", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "offset", value = "当页数量", required = true, paramType = "query", dataType = "int",defaultValue = "30",example = "30"),
     })
     @RequestMapping(value = "search/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String searchUser(@RequestParam(value = "word") String word,@RequestParam(value = "offset") Integer offset){
@@ -105,7 +105,7 @@ public class PublicController {
     @ApiOperation(value = "搜索作者的插画",notes = "搜索作者的插画")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "作者id", required = true, paramType = "query", dataType = "string"),
-            @ApiImplicitParam(name = "offset", value = "当页数量", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "offset", value = "当页数量", required = true, paramType = "query", dataType = "int",defaultValue = "30",example = "30"),
     })
     @RequestMapping(value = "search/users/illusts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String userIllusts(@RequestParam(value = "id") String id,@RequestParam(value = "offset") Integer offset){

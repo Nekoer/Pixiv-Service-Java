@@ -1,6 +1,5 @@
 package com.hcyacg.pixiv.controller;
 
-import com.hcyacg.pixiv.service.EmailService;
 import com.hcyacg.pixiv.service.GeetestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
