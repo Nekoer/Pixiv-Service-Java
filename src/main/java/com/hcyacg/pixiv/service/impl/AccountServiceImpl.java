@@ -49,16 +49,7 @@ import java.util.*;
 @Transactional(rollbackFor = Exception.class)
 public class AccountServiceImpl implements AccountService {
 
-    @Value(value = "${pixiv.client_id}")
-    private String clientId;
-    @Value(value = "${pixiv.client_secret}")
-    private String clientSecret;
-    @Value(value = "${pixiv.hash_secret}")
-    private String hashSecret;
-    @Value(value = "${pixiv.account.username}")
-    private String userName;
-    @Value(value = "${pixiv.account.password}")
-    private String passWord;
+
     @Autowired
     private HttpUtils httpUtils;
     @Autowired
@@ -92,8 +83,23 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private JwtOperation jwtOperation;
+
     @Value("${minio.domin}")
     private String domin;
+    @Value(value = "${pixiv.client_id}")
+    private String clientId;
+    @Value(value = "${pixiv.client_secret}")
+    private String clientSecret;
+    @Value(value = "${pixiv.hash_secret}")
+    private String hashSecret;
+    @Value(value = "${pixiv.account.username}")
+    private String userName;
+    @Value(value = "${pixiv.account.password}")
+    private String passWord;
+    @Value(value = "${pixiv.token.access}")
+    private String accessToken;
+    @Value(value = "${pixiv.token.refresh}")
+    private String refreshToken;
 
     /**
      * 获取pixiv的账号数据
@@ -105,8 +111,8 @@ public class AccountServiceImpl implements AccountService {
         if (!StringUtils.isBlank(String.valueOf(token1)) && token1 != null) {
             return new Result(201, "缓存已存在", token1, null);
         }
-        HttpPost httpPost = null;
-        ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        //HttpPost httpPost = null;
+        //ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
         try {
 
 
@@ -157,14 +163,14 @@ public class AccountServiceImpl implements AccountService {
 
             PixivToken token = new PixivToken();
             //token.setAccessToken(String.valueOf(obj.get("access_token")));
-            token.setAccessToken("DkxGWcGq36lP3XpJCzKVggZ0KqMESAVGSSZAQPPYOb0");
+            token.setAccessToken(accessToken);
 
             //token.setDeviceToken(String.valueOf(obj.get("device_token")));
             //token.setExpiresIn(String.valueOf(obj.get("expires_in")));
             token.setExpiresIn("3600");
 
             //token.setRefreshToken(String.valueOf(obj.get("refresh_token")));
-            token.setRefreshToken("gtHmF_iv9bGMYz1xl5GG8iQ44PS_kcWa64h-a-iDmCw");
+            token.setRefreshToken(refreshToken);
 
             //token.setTokenType(String.valueOf(obj.get("token_type")));
 
@@ -181,21 +187,22 @@ public class AccountServiceImpl implements AccountService {
 //                tokenMapper.updateById(token);
 //            }
             refreshToken();
-            infoStream.close();
-            return new Result(201, "请求成功", JSONObject.parse(infoStream.toString("UTF-8")), "");
+            //infoStream.close();
+            //return new Result(201, "请求成功", JSONObject.parse(infoStream.toString("UTF-8")), "");
+            return new Result(201, "请求成功", token, "");
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(500, "请求失败", "", e.getMessage());
         } finally {
-            assert httpPost != null;
-            httpPost.abort();
+            //assert httpPost != null;
+            //httpPost.abort();
         }
 
     }
 
     @Override
     public Result refreshToken() {
-        HttpPost httpPost = null;
+        HttpPost httpPost;
         ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
         try{
             Object token1 = redisUtils.get("topToken");
@@ -224,7 +231,7 @@ public class AccountServiceImpl implements AccountService {
 //            httpPost.addHeader("Connection", "Close");
 
 
-            CloseableHttpResponse response = null;
+            CloseableHttpResponse response;
             //发送请求
             response = httpClient.execute(httpPost);
             InputStream in = response.getEntity().getContent();
@@ -622,7 +629,7 @@ public class AccountServiceImpl implements AccountService {
                 }
             }
 
-            if (AppConstant.ISNUMBER.matches(sex) && Arrays.asList(AppConstant.ACCOUNT_FEMALE, AppConstant.ACCOUNT_MALE, AppConstant.ACCOUNT_SECRECY).indexOf(Integer.parseInt(sex)) < 0) {
+            if (AppConstant.ISNUMBER.matches(sex) && !Arrays.asList(AppConstant.ACCOUNT_FEMALE, AppConstant.ACCOUNT_MALE, AppConstant.ACCOUNT_SECRECY).contains(Integer.parseInt(sex))) {
                 return httpUtils.setBuild(res, new Result(400, "不存在该性别", null, null));
             }
 

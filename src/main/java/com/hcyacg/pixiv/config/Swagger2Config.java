@@ -1,8 +1,13 @@
 package com.hcyacg.pixiv.config;
 
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -15,8 +20,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 //@EnableSwagger2
 @Configuration
-//@EnableSwagger2WebMvc
-public class Swagger2Config {
+@EnableSwagger2WebMvc
+@EnableKnife4j
+public class Swagger2Config extends WebMvcConfigurationSupport {
 
     /**
      * @Description: swagger2的配置文件，这里可以配置swagger2的一些基本的内容，比如扫描的包等等
@@ -59,6 +65,18 @@ public class Swagger2Config {
                 .description("欢迎访问Pixiv插画接口文档，这里是描述信息")
                 // 定义版本号
                 .version("1.0").build();
+    }
+
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("doc.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        Swagger2Config.super.addResourceHandlers(registry);
     }
 
 }

@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- swagger2 配置 -->
 <!--        <dependency>-->
 <!--            <groupId>io.springfox</groupId>-->
@@ -115,6 +121,7 @@
             <artifactId>core</artifactId>
             <version>3.3.3</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>

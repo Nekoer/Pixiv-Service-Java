@@ -12,7 +12,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 @EnableRabbit
 @SpringBootApplication
-@EnableSwagger2WebMvc
 @MapperScan("com.hcyacg.pixiv.mapper")
 public class PixivApplication extends SpringBootServletInitializer {
     @Override
