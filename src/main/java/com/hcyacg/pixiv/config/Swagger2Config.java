@@ -22,7 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @Configuration
 @EnableSwagger2WebMvc
 @EnableKnife4j
-public class Swagger2Config extends WebMvcConfigurationSupport {
+public class Swagger2Config{
 
     /**
      * @Description: swagger2的配置文件，这里可以配置swagger2的一些基本的内容，比如扫描的包等等
@@ -35,13 +35,7 @@ public class Swagger2Config extends WebMvcConfigurationSupport {
 //                .paths(PathSelectors.any()).build();
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(new ApiInfoBuilder()
-                        //.title("swagger-bootstrap-ui-demo RESTful APIs")
-                        .description("使用swagger2构建Pixiv插画后端api接口文档")
-                        .termsOfServiceUrl("https://www.hcyacg.com/")
-                        .contact(new Contact("HCYACG", "http://www.hcyacg.com", "hcyacg@vip.qq.com"))
-                        .version("1.0")
-                        .build())
+                .apiInfo(apiInfo())
                 //分组名称
                 .groupName("1.0版本")
                 .select()
@@ -57,26 +51,12 @@ public class Swagger2Config extends WebMvcConfigurationSupport {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                // 设置页面标题
-                .title("使用swagger2构建Pixiv插画后端api接口文档")
-                // 设置联系人
+                //.title("swagger-bootstrap-ui-demo RESTful APIs")
+                .description("使用swagger2构建Pixiv插画后端api接口文档")
+                .termsOfServiceUrl("https://www.hcyacg.com/")
                 .contact(new Contact("HCYACG", "http://www.hcyacg.com", "hcyacg@vip.qq.com"))
-                // 描述
-                .description("欢迎访问Pixiv插画接口文档，这里是描述信息")
-                // 定义版本号
-                .version("1.0").build();
-    }
-
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("doc.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        Swagger2Config.super.addResourceHandlers(registry);
+                .version("1.0")
+                .build();
     }
 
 }
