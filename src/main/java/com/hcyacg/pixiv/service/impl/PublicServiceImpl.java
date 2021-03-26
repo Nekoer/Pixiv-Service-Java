@@ -302,6 +302,10 @@ public class PublicServiceImpl implements PublicService {
 //            amazingPic.setPages(illustPage.getPages());
 //            amazingPic.setSize(illustPage.getSize());
 
+            if(illusts.size() < 1){
+                return httpUtils.setBuild(res,new Result(404, "获取失败", null, "库存为0"));
+            }
+
             int num = (int) (Math.random() * (illusts.size() - 1) + 1);
 
 
