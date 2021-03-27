@@ -13,7 +13,7 @@ http://www.acgmx.com/ 的服务端
 ![](https://s1.ax1x.com/2020/07/19/UfSPJO.png)
 
 #### 配置要求
-![Tomcat](https://img.shields.io/badge/Tomcat-%3E%3D7-blue)
+![Tomcat](https://img.shields.io/badge/Tomcat-9-blue)
 
 #### 安装教程
 Springboot项目 Tomcat启动

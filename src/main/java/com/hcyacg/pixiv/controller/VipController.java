@@ -3,8 +3,6 @@ package com.hcyacg.pixiv.controller;
 import com.hcyacg.pixiv.dto.Result;
 import com.hcyacg.pixiv.service.VipService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
