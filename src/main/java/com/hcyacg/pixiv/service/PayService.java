@@ -14,28 +14,14 @@ import java.math.BigDecimal;
  */
 public interface PayService {
 
-    /**
-     * 创建支付路径
-     * @param authorization 用户jwt
-     * @param type 支付方式
-     * @param vipId 会员种类
-     * @param vipPackAge 会员套餐
-     * @return 返回支付路径
-     */
-    Result createUrl(String authorization,Integer type, Integer vipId, Integer vipPackAge);
 
-    /**
-     * 支付异步回调
-     * @return
-     */
-    String notifyUrl(HttpServletRequest request);
 
     /**
      * 支付宝支付调用接口
      *
      * @param vip vip
      */
-    void aliPay(String authorization, int vip, Boolean json);
+    void aliPay(String authorization, int vip, Boolean json,Boolean base64);
 
     String notify(HttpServletRequest request, HttpServletResponse response);
 
